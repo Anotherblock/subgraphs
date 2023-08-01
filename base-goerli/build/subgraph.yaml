@@ -1,0 +1,24 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: AnotherCloneFactory
+    network: base-testnet
+    source:
+      address: "0x3d92216ebe9ce3d5fdccf74990602c9d1d9d1b77"
+      abi: AnotherCloneFactory
+      startBlock: 7843860
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - CollectionCreated
+      abis:
+        - name: AnotherCloneFactory
+          file: AnotherCloneFactory/abis/AnotherCloneFactory.json
+      eventHandlers:
+        - event: CollectionCreated(indexed address,indexed address)
+          handler: handleCollectionCreated
+      file: AnotherCloneFactory/AnotherCloneFactory.wasm

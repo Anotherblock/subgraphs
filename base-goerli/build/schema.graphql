@@ -1,0 +1,8 @@
+type Collection @entity {
+  id: String!
+  nft: String!
+  publisher: String!
+  createdBlockNumber: BigInt!
+  timestamp: BigInt!
+  createdTransactionHash: Bytes!
+}
