@@ -38,9 +38,15 @@ dataSources:
       abis:
         - name: ABDataRegistry
           file: ./abis/ABDataRegistry.json
+        - name: ERC721AB
+          file: ./abis/ERC721AB.json
+        - name: ERC1155AB
+          file: ./abis/ERC1155AB.json
       eventHandlers:
         - event: PublisherRegistered(address,indexed address)
           handler: handlePublisherRegistered
         - event: DropRegistered(indexed uint256,indexed uint256,address,address)
           handler: handleDropRegistered
+        # - function: PublisherFeeUpdated(address,uint256)
+        #   handler: handlePublisherFeeUpdated
       file: ./src/ab-data-registry.ts

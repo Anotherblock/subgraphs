@@ -14,15 +14,12 @@ import { Collection } from "../generated/schema";
 export function handleCollectionCreated(event: CollectionCreated): void {
   let contract = AnotherCloneFactory.bind(event.address);
 
-  let collectionId = contract.collectionCount();
-
-  let collection = Collection.load(collectionId.toString());
+  let collection = Collection.load(event.params.nft.toHexString());
 
   if (!collection) {
-    collection = new Collection(collectionId.toString());
+    collection = new Collection(event.params.nft.toHexString());
   }
 
-  collection.nft = event.params.nft.toHexString();
   collection.publisher = event.params.publisher.toHexString();
 
   collection.createdTransactionHash = event.transaction.hash;

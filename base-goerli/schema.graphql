@@ -1,6 +1,5 @@
 type Collection @entity {
   id: String!
-  nft: String!
   publisher: Publisher!
   createdBlockNumber: BigInt!
   timestamp: BigInt!
@@ -14,4 +13,17 @@ type Publisher @entity {
   registeredBlockNumber: BigInt!
   timestamp: BigInt!
   registeredTransactionHash: Bytes!
+}
+
+type Drop @entity {
+  id: String!
+  tokenId: BigInt!
+  collection: Collection!
+  maxSupply: BigInt!
+  currentSupply: BigInt!
+  sharePerToken: BigInt!
+  # royaltyCurrency: String!
+  createdBlockNumber: BigInt!
+  timestamp: BigInt!
+  createdTransactionHash: Bytes!
 }

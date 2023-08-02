@@ -38,6 +38,10 @@ dataSources:
       abis:
         - name: ABDataRegistry
           file: ABDataRegistry/abis/ABDataRegistry.json
+        - name: ERC721AB
+          file: ABDataRegistry/abis/ERC721AB.json
+        - name: ERC1155AB
+          file: ABDataRegistry/abis/ERC1155AB.json
       eventHandlers:
         - event: PublisherRegistered(address,indexed address)
           handler: handlePublisherRegistered
