@@ -6,9 +6,9 @@ dataSources:
     name: AnotherCloneFactory
     network: base-testnet
     source:
-      address: "0x3d92216ebe9ce3d5fdccf74990602c9d1d9d1b77"
+      address: "0x1158D607ce17040C0333fEc34a2D84460598975E"
       abi: AnotherCloneFactory
-      startBlock: 7843860
+      startBlock: 7896160
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -26,9 +26,9 @@ dataSources:
     name: ABDataRegistry
     network: base-testnet
     source:
-      address: "0x5596e37618Cb696f84B13d562055889221dbe3f5"
+      address: "0x65609893ebDD1C06E11f27Bba4Fe4BB35e3d6f71"
       abi: ABDataRegistry
-      startBlock: 7843860
+      startBlock: 7896160
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -49,8 +49,8 @@ dataSources:
           handler: handlePublisherRegistered
         - event: DropRegistered(indexed uint256,indexed uint256,address,address)
           handler: handleDropRegistered
-        # - function: PublisherFeeUpdated(address,uint256)
-        #   handler: handlePublisherFeeUpdated
+        - function: PublisherFeeUpdated(address,uint256)
+          handler: handlePublisherFeeUpdated
       file: ./src/ab-data-registry.ts
 templates:
   - kind: ethereum
