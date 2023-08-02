@@ -66,6 +66,10 @@ export function handleDropRegistered(event: DropRegistered): void {
     sharePerToken = nftContract.sharePerToken();
   } else {
     let nftContract = ERC1155AB.bind(event.params.nft);
+    let details = nftContract.tokensDetails(event.params.tokenId);
+    currentSupply = details.value1;
+    maxSupply = details.value2;
+    sharePerToken = details.value4;
   }
 
   drop.tokenId = event.params.tokenId;
