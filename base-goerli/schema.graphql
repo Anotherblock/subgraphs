@@ -41,3 +41,9 @@ type UserHoldings @entity {
   totalQuantity: BigInt!
   tokenIds: [TokenId!]!
 }
+
+type TokenId @entity {
+  id: String!
+  dropId: Drop!
+  owner: User!
+}

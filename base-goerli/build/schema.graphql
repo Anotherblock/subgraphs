@@ -18,7 +18,6 @@ type Publisher @entity {
 type Drop @entity {
   id: String!
   type: String!
-  tokenId: BigInt!
   collection: Collection!
   maxSupply: BigInt!
   currentSupply: BigInt!
@@ -27,4 +26,24 @@ type Drop @entity {
   createdBlockNumber: BigInt!
   timestamp: BigInt!
   createdTransactionHash: Bytes!
+}
+
+type User @entity {
+  id: String!
+  totalHoldings: BigInt!
+  holdings: [UserHoldings!]! @derivedFrom(field: "user")
+}
+
+type UserHoldings @entity {
+  id: String!
+  user: User!
+  dropId: Drop!
+  totalQuantity: BigInt!
+  tokenIds: [TokenId!]!
+}
+
+type TokenId @entity {
+  id: String!
+  dropId: Drop!
+  owner: User!
 }

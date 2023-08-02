@@ -52,3 +52,22 @@ dataSources:
         # - function: PublisherFeeUpdated(address,uint256)
         #   handler: handlePublisherFeeUpdated
       file: ./src/ab-data-registry.ts
+templates:
+  - kind: ethereum
+    name: ERC721AB
+    network: base-testnet
+    source:
+      abi: ERC721AB
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: ERC721AB
+          file: ./abis/ERC721AB.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/erc721-ab.ts

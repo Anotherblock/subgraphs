@@ -50,3 +50,22 @@ dataSources:
         - event: DropRegistered(indexed uint256,indexed uint256,address,address)
           handler: handleDropRegistered
       file: ABDataRegistry/ABDataRegistry.wasm
+templates:
+  - kind: ethereum
+    name: ERC721AB
+    network: base-testnet
+    source:
+      abi: ERC721AB
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: ERC721AB
+          file: ERC721AB/abis/ERC721AB.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: templates/ERC721AB/ERC721AB.wasm

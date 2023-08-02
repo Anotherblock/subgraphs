@@ -6,7 +6,8 @@ import {
   SetPublisherFeeCall,
 } from "../generated/ABDataRegistry/ABDataRegistry";
 
-import { ERC721AB } from "../generated/ABDataRegistry/ERC721AB";
+import { ERC721AB as ERC721ABTemplate } from "../generated/templates";
+import { ERC721AB } from "../generated/templates/ERC721AB/ERC721AB";
 import { ERC1155AB } from "../generated/ABDataRegistry/ERC1155AB";
 import { ABRoyalty } from "../generated/ABDataRegistry/ABRoyalty";
 
@@ -66,6 +67,7 @@ export function handleDropRegistered(event: DropRegistered): void {
     currentSupply = nftContract.totalSupply();
     sharePerToken = nftContract.sharePerToken();
     type = "ERC721";
+    ERC721ABTemplate.create(event.params.nft);
   } else {
     let nftContract = ERC1155AB.bind(event.params.nft);
     let details = nftContract.tokensDetails(event.params.tokenId);
