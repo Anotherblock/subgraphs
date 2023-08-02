@@ -28,4 +28,16 @@ type Drop @entity {
   createdTransactionHash: Bytes!
 }
 
+type User @entity {
+  id: String!
+  totalHoldings: BigInt!
+  holdings: [UserHoldings!]! @derivedFrom(field: "user")
+}
 
+type UserHoldings @entity {
+  id: String!
+  user: User!
+  dropId: Drop!
+  totalQuantity: BigInt!
+  tokenIds: [TokenId!]!
+}
