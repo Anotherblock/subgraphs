@@ -7,8 +7,8 @@ import {
 } from "../generated/ABDataRegistry/ABDataRegistry";
 
 import { ERC721AB } from "../generated/ABDataRegistry/ERC721AB";
-
 import { ERC1155AB } from "../generated/ABDataRegistry/ERC1155AB";
+import { ABRoyalty } from "../generated/ABDataRegistry/ABRoyalty";
 
 import { Collection, Drop, Publisher } from "../generated/schema";
 
@@ -58,25 +58,35 @@ export function handleDropRegistered(event: DropRegistered): void {
   let maxSupply = BigInt.fromI32(0);
   let currentSupply = BigInt.fromI32(0);
   let sharePerToken = BigInt.fromI32(0);
+  let type = "undefined";
 
   if (event.params.tokenId == BigInt.fromI32(0)) {
     let nftContract = ERC721AB.bind(event.params.nft);
     maxSupply = nftContract.maxSupply();
     currentSupply = nftContract.totalSupply();
     sharePerToken = nftContract.sharePerToken();
+    type = "ERC721";
   } else {
     let nftContract = ERC1155AB.bind(event.params.nft);
     let details = nftContract.tokensDetails(event.params.tokenId);
     currentSupply = details.value1;
     maxSupply = details.value2;
     sharePerToken = details.value4;
+    type = "ERC1155";
   }
 
-  drop.tokenId = event.params.tokenId;
+  let registryContract = ABDataRegistry.bind(event.address);
+  let royaltyContractAddr = registryContract.publishers(event.params.publisher);
+  let royaltyContract = ABRoyalty.bind(royaltyContractAddr);
+
+  let royaltyCurrency = royaltyContract.royaltyCurrency(event.params.dropId);
+
   drop.collection = collection.id;
+  drop.type = type;
   drop.maxSupply = maxSupply;
   drop.currentSupply = currentSupply;
   drop.sharePerToken = sharePerToken;
+  drop.royaltyCurrency = royaltyCurrency.toHexString();
 
   drop.createdTransactionHash = event.transaction.hash;
   drop.createdBlockNumber = event.block.number;

@@ -17,12 +17,13 @@ type Publisher @entity {
 
 type Drop @entity {
   id: String!
+  type: String!
   tokenId: BigInt!
   collection: Collection!
   maxSupply: BigInt!
   currentSupply: BigInt!
   sharePerToken: BigInt!
-  # royaltyCurrency: String!
+  royaltyCurrency: String!
   createdBlockNumber: BigInt!
   timestamp: BigInt!
   createdTransactionHash: Bytes!

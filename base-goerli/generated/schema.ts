@@ -247,6 +247,19 @@ export class Drop extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get type(): string {
+    let value = this.get("type");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
+  }
+
   get tokenId(): BigInt {
     let value = this.get("tokenId");
     if (!value || value.kind == ValueKind.NULL) {
@@ -310,6 +323,19 @@ export class Drop extends Entity {
 
   set sharePerToken(value: BigInt) {
     this.set("sharePerToken", Value.fromBigInt(value));
+  }
+
+  get royaltyCurrency(): string {
+    let value = this.get("royaltyCurrency");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set royaltyCurrency(value: string) {
+    this.set("royaltyCurrency", Value.fromString(value));
   }
 
   get createdBlockNumber(): BigInt {
