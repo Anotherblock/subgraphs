@@ -3,7 +3,7 @@ import {
   ABDataRegistry,
   PublisherRegistered,
   DropRegistered,
-  SetPublisherFeeCall,
+  PublisherFeesUpdated,
 } from "../generated/ABDataRegistry/ABDataRegistry";
 
 import { ERC721AB as ERC721ABTemplate } from "../generated/templates";
@@ -35,7 +35,7 @@ export function handlePublisherRegistered(event: PublisherRegistered): void {
   publisher.save();
 }
 
-export function handlePublisherFeeUpdated(event: PublisherFeeUpdated): void {
+export function handlePublisherFeeUpdated(event: PublisherFeesUpdated): void {
   let contract = ABDataRegistry.bind(event.address);
 
   let publisher = Publisher.load(event.params.publisher.toHexString());

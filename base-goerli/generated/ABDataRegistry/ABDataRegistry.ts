@@ -242,6 +242,28 @@ export class UpdatedPhase__Params {
   }
 }
 
+export class PublisherFeesUpdated extends ethereum.Event {
+  get params(): PublisherFeesUpdated__Params {
+    return new PublisherFeesUpdated__Params(this);
+  }
+}
+
+export class PublisherFeesUpdated__Params {
+  _event: PublisherFeesUpdated;
+
+  constructor(event: PublisherFeesUpdated) {
+    this._event = event;
+  }
+
+  get publisher(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get fee(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class ABDataRegistry__dropsResult {
   value0: BigInt;
   value1: BigInt;
