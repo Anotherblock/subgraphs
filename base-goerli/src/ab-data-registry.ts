@@ -35,16 +35,16 @@ export function handlePublisherRegistered(event: PublisherRegistered): void {
   publisher.save();
 }
 
-// export function handlePublisherFeeUpdated(event: PublisherFeeUpdated): void {
-//   let contract = ABDataRegistry.bind(event.address);
+export function handlePublisherFeeUpdated(event: PublisherFeeUpdated): void {
+  let contract = ABDataRegistry.bind(event.address);
 
-//   let publisher = Publisher.load(event.params.publisher.toHexString());
+  let publisher = Publisher.load(event.params.publisher.toHexString());
 
-//   if (publisher) {
-//     publisher.publisherFee = event.params.fee;
-//     publisher.save();
-//   }
-// }
+  if (publisher) {
+    publisher.publisherFee = event.params.fee;
+    publisher.save();
+  }
+}
 
 export function handleDropRegistered(event: DropRegistered): void {
   let drop = Drop.load(event.params.dropId.toString());
