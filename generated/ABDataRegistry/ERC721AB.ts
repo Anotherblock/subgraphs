@@ -10,6 +10,24 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class UpdatedPhase extends ethereum.Event {
+  get params(): UpdatedPhase__Params {
+    return new UpdatedPhase__Params(this);
+  }
+}
+
+export class UpdatedPhase__Params {
+  _event: UpdatedPhase;
+
+  constructor(event: UpdatedPhase) {
+    this._event = event;
+  }
+
+  get numOfPhase(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class Approval extends ethereum.Event {
   get params(): Approval__Params {
     return new Approval__Params(this);
