@@ -1,0 +1,12 @@
+import { BigInt } from '@graphprotocol/graph-ts';
+
+export const DROP_MANAGER_ADDRESS = '0x158538e11f5aD38E07a1bD0000ADe10B43efaDB4';
+export const DROP_ADDRESS = '0x9ef75b412D8466B9b35F3A1Bf7a809a5C6d0Aa7C';
+export const PFP_ADDRESS = '';
+export const ROYALTY_ADDRESS = '0xE312fC119bD4e27E22AEac1c2746344865614237';
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const AB_VAULT = '0x7ed286F43C36B42e8e37Ce82E1Ad56398A3ED4A1';
+export const AB_PAYOUT = '0xeaC7aBc257CBa052Dad68F9e334E61a54ADc5740';
+
+export const ZERO_BI = BigInt.fromI32(0);
+export const ONE_BI = BigInt.fromI32(1);

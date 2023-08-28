@@ -1,0 +1,44 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ABPayout.json
+    network: {{network}}
+    source:
+      address: '{{AB_PAYOUT}}'
+      abi: ABPayout
+      startBlock: {{block}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Payout
+      abis:
+        - name: ABPayout
+          file: ./abis/ABPayout.json
+      eventHandlers:
+        - event: Claimed(address,uint256,uint256)
+          handler: handleClaimed
+      file: ./src/mapping/payout.ts
+  - kind: ethereum
+    name: ABVault.json
+    network: {{network}}
+    source:
+      address: '{{AB_VAULT}}'
+      abi: ABVault
+      startBlock: {{block}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Payout
+      abis:
+        - name: ABVault
+          file: ./abis/ABVault.json
+      eventHandlers:
+        - event: PayoutDistributed(address,uint256,uint256)
+          handler: handleDistribute
+      file: ./src/mapping/payout.ts

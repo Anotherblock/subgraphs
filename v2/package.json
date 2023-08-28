@@ -1,5 +1,5 @@
 {
-  "name": "anotherblock-platform",
+  "name": "anotherblock-v2",
   "license": "UNLICENSED",
   "scripts": {
     "test": "graph test",

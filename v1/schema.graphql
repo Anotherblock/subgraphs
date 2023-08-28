@@ -1,0 +1,70 @@
+type Drop @entity {
+  id: String!
+  dropId: BigInt!
+  price: BigInt!
+  supply: BigInt!
+  royaltySharePerToken: BigInt!
+  rightHolderFee: BigInt!
+  owner: String!
+  nft: String!
+  sold: BigInt!
+  createdBlockNumber: BigInt!
+  timestamp: BigInt!
+  createdTransactionHash: Bytes!
+}
+
+type TokenId @entity {
+  id: String!
+  dropId: Drop!
+  owner: User!
+}
+
+type User @entity {
+  id: String!
+  totalHoldings: BigInt!
+  holdings: [UserHoldings!]! @derivedFrom(field: "user")
+}
+
+type UserHoldings @entity {
+  id: String!
+  user: User!
+  dropId: Drop!
+  totalQuantity: BigInt!
+  tokenIds: [TokenId!]!
+}
+
+type DropPhase @entity {
+  id: String!
+  drop: Drop!
+  phases: [Phase!]!
+}
+
+type Phase @entity {
+  id: String!
+  maxMint: BigInt!
+  phaseStart: BigInt!
+  merkle: String!
+}
+
+type Payout @entity {
+  id: String!
+  underlying: String!
+  amount: BigInt!
+  dropId: BigInt!
+  transactionHash: Bytes!
+  timestamp: BigInt!
+}
+
+type Claim @entity {
+  id: String!
+  user: String!
+  amount: BigInt!
+  dropId: BigInt!
+  transactionHash: Bytes!
+  timestamp: BigInt!
+}
+
+type AnotherPFP @entity {
+  id: String!
+  owner: String!
+}

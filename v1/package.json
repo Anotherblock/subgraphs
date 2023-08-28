@@ -1,0 +1,17 @@
+{
+  "name": "anotherblock-v1",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "lint": "eslint . --fix --ext .js,.ts,.tsx",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ abb",
+    "create-local": "graph create --node http://localhost:8020/ abb",
+    "remove-local": "graph remove --node http://localhost:8020/ abb",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 abb",
+    "prepare:mainnet": "npx node ./update-conf.js && mustache config/mainnet.json eth.subgraph.template.yaml > subgraph.yaml && mustache config/mainnet.json src/constant.template.ts > src/constant.ts",
+    "prepare:goerli": "npx node ./update-conf.js && mustache config/goerli.json eth.subgraph.template.yaml > subgraph.yaml && mustache config/goerli.json src/constant.template.ts > src/constant.ts",
+    "prepare:optimism-goerli": "npx node ./update-conf.js && mustache config/optimism-goerli.json optimism.subgraph.template.yml > subgraph.yaml && mustache config/optimism-goerli.json src/constant.template.ts > src/constant.ts",
+    "prepare:optimism-mainnet": "npx node ./update-conf.js && mustache config/optimism-mainnet.json optimism.subgraph.template.yml > subgraph.yaml && mustache config/optimism-mainnet.json src/constant.template.ts > src/constant.ts"
+  }
+}

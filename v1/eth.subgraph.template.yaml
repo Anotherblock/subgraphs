@@ -1,0 +1,88 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ABDropManager
+    network: '{{network}}'
+    source:
+      address: '{{DROP_MANAGER_ADDRESS}}'
+      abi: ABDropManager
+      startBlock: {{block}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - DropCreated
+        - OwnershipTransferred
+      abis:
+        - name: ABDropManager
+          file: ./abis/ABDropManagerV2.json
+      eventHandlers:
+        - event: DropCreated(uint256)
+          handler: handleDropCreated
+        - event: DropUpdated(uint256)
+          handler: handleDropUpdated
+      file: ./src/mapping/drop-manager.ts
+  - kind: ethereum
+    name: AnotherPFP
+    network: '{{network}}'
+    source:
+      address: '{{PFP_ADDRESS}}'
+      abi: AnotherPFP
+      startBlock: {{pfp_block}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: AnotherPFP
+          file: ./abis/AnotherPFP.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handlePfpTransfer
+      file: ./src/mapping/pfp.ts
+  - kind: ethereum
+    name: Old721V1
+    network: {{network}}
+    source:
+      address: '0x9ef75b412D8466B9b35F3A1Bf7a809a5C6d0Aa7C'
+      abi: Old721V1
+      startBlock: 15320925
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: Old721V1
+          file: ./abis/Old721V1.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleOldTransfer
+      file: ./src/mapping/old721.ts
+templates:
+  - kind: ethereum
+    name: Another721
+    network: '{{network}}'
+    source:
+      abi: Another721
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: Another721
+          file: ./abis/Another721.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: UpdatedPhase(uint256)
+          handler: handlePhasesUpdated
+      file: ./src/mapping/another721.ts
