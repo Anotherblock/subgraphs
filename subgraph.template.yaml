@@ -70,6 +70,4 @@ templates:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-        - event: UpdatedPhase(uint256)
-          handler: handleUpdatedPhase
       file: ./src/erc721-ab.ts
