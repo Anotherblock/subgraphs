@@ -28,6 +28,21 @@ type Drop @entity {
   createdTransactionHash: Bytes!
 }
 
+type DropPhase @entity {
+  id: String!
+  drop: Drop!
+  phases: [Phase!]!
+}
+
+type Phase @entity {
+  id: String!
+  phaseStart: BigInt!
+  phaseEnd: BigInt!
+  price: BigInt!
+  maxMint: BigInt!
+  isPublic: Boolean!
+}
+
 type User @entity {
   id: String!
   totalHoldings: BigInt!
