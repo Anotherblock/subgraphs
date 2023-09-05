@@ -6,9 +6,7 @@ import {
   UpdatedPhase,
 } from "../generated/templates/ERC721AB/ERC721AB";
 
-import { CollectionCreated } from "../generated/AnotherCloneFactory/AnotherCloneFactory";
 import {
-  Collection,
   Drop,
   DropPhase,
   Phase,
