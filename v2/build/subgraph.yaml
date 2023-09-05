@@ -70,4 +70,6 @@ templates:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+        - event: UpdatedPhase(uint256)
+          handler: handlePhasesUpdated
       file: templates/ERC721AB/ERC721AB.wasm
