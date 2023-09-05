@@ -1,13 +1,28 @@
+type Collection @entity {
+  id: String!
+  publisher: Publisher!
+  createdBlockNumber: BigInt!
+  timestamp: BigInt!
+  createdTransactionHash: Bytes!
+}
+
+type Publisher @entity {
+  id: String!
+  royalty: String!
+  publisherFee: BigInt!
+  registeredBlockNumber: BigInt!
+  timestamp: BigInt!
+  registeredTransactionHash: Bytes!
+}
+
 type Drop @entity {
   id: String!
-  dropId: BigInt!
-  price: BigInt!
-  supply: BigInt!
-  royaltySharePerToken: BigInt!
-  rightHolderFee: BigInt!
-  owner: String!
-  nft: String!
-  sold: BigInt!
+  type: String!
+  collection: Collection!
+  maxSupply: BigInt!
+  currentSupply: BigInt!
+  sharePerToken: BigInt!
+  royaltyCurrency: String!
   createdBlockNumber: BigInt!
   timestamp: BigInt!
   createdTransactionHash: Bytes!

@@ -13,5 +13,9 @@
     "prepare:goerli": "npx node ./update-conf.js && mustache config/goerli.json eth.subgraph.template.yaml > subgraph.yaml && mustache config/goerli.json src/constant.template.ts > src/constant.ts",
     "prepare:optimism-goerli": "npx node ./update-conf.js && mustache config/optimism-goerli.json optimism.subgraph.template.yml > subgraph.yaml && mustache config/optimism-goerli.json src/constant.template.ts > src/constant.ts",
     "prepare:optimism-mainnet": "npx node ./update-conf.js && mustache config/optimism-mainnet.json optimism.subgraph.template.yml > subgraph.yaml && mustache config/optimism-mainnet.json src/constant.template.ts > src/constant.ts"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.5.0",
+    "mustache": "^4.2.0"
   }
 }

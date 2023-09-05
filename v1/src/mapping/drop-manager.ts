@@ -1,15 +1,33 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address } from "@graphprotocol/graph-ts";
 
 import {
   ABDropManager,
   DropCreated,
   DropUpdated,
-} from '../../generated/ABDropManager/ABDropManager';
-import { Drop } from '../../generated/schema';
-import { Another721 } from '../../generated/templates';
-import { DROP_ADDRESS, DROP_MANAGER_ADDRESS, ZERO_ADDRESS } from '../constant';
+} from "../../generated/ABDropManager/ABDropManager";
+import { Collection, Drop, Publisher } from "../../generated/schema";
+import { Another721 } from "../../generated/templates";
+import {
+  DROP_ADDRESS,
+  DROP_MANAGER_ADDRESS,
+  ZERO_ADDRESS,
+  AB_PAYOUT,
+  ZERO_BI,
+} from "../constant";
 
 export function handleDropCreated(event: DropCreated): void {
+  let abPublisher = Publisher.load(ZERO_ADDRESS);
+
+  if (!abPublisher) {
+    abPublisher = new Publisher(ZERO_ADDRESS);
+    abPublisher.royalty = AB_PAYOUT;
+    abPublisher.publisherFee = ZERO_BI;
+    abPublisher.registeredBlockNumber = event.block.number;
+    abPublisher.timestamp = event.block.timestamp;
+    abPublisher.registeredTransactionHash = event.transaction.hash;
+    abPublisher.save();
+  }
+
   let drop = Drop.load(event.params.dropId.toString());
 
   if (!drop) {
@@ -18,23 +36,29 @@ export function handleDropCreated(event: DropCreated): void {
   const contract = ABDropManager.bind(Address.fromString(DROP_MANAGER_ADDRESS));
   const dropInfo = contract.try_drops(event.params.dropId);
 
+  let collection = Collection.load(dropInfo.value.value5.toHexString());
+
+  if (!collection) {
+    collection = new Collection(dropInfo.value.value5.toHexString());
+    collection.publisher = abPublisher.id;
+    collection.createdBlockNumber = event.block.number;
+    collection.timestamp = event.block.timestamp;
+    collection.createdTransactionHash = event.transaction.hash;
+  }
+
   drop.createdTransactionHash = event.transaction.hash;
   drop.createdBlockNumber = event.block.number;
   drop.timestamp = event.block.timestamp;
 
   if (!dropInfo.reverted) {
-    drop.dropId = dropInfo.value.value0;
-    drop.sold = dropInfo.value.value1;
-    drop.rightHolderFee = dropInfo.value.value2;
-    drop.price = dropInfo.value.value3.price;
-    drop.supply = dropInfo.value.value3.supply;
-    drop.royaltySharePerToken = dropInfo.value.value3.royaltySharePerToken;
-    drop.owner = dropInfo.value.value4.toHexString();
-    if (dropInfo.value.value5 == Address.fromString(ZERO_ADDRESS)) {
-      drop.nft = DROP_ADDRESS;
-    } else {
-      drop.nft = dropInfo.value.value5.toHexString();
-    }
+    drop.id = dropInfo.value.value0.toString();
+    drop.currentSupply = dropInfo.value.value1;
+    drop.maxSupply = dropInfo.value.value3.supply;
+    drop.sharePerToken = dropInfo.value.value3.royaltySharePerToken;
+    drop.collection = collection.id;
+    drop.type = "ERC721";
+    drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
+
     drop.save();
 
     Another721.create(dropInfo.value.value5);
@@ -42,6 +66,18 @@ export function handleDropCreated(event: DropCreated): void {
 }
 
 export function handleDropUpdated(event: DropUpdated): void {
+  let abPublisher = Publisher.load(ZERO_ADDRESS);
+
+  if (!abPublisher) {
+    abPublisher = new Publisher(ZERO_ADDRESS);
+    abPublisher.royalty = AB_PAYOUT;
+    abPublisher.publisherFee = ZERO_BI;
+    abPublisher.registeredBlockNumber = event.block.number;
+    abPublisher.timestamp = event.block.timestamp;
+    abPublisher.registeredTransactionHash = event.transaction.hash;
+    abPublisher.save();
+  }
+
   let drop = Drop.load(event.params.dropId.toString());
 
   if (!drop) {
@@ -53,19 +89,25 @@ export function handleDropUpdated(event: DropUpdated): void {
   const contract = ABDropManager.bind(event.address);
   const dropInfo = contract.try_drops(event.params.dropId);
 
+  let collection = Collection.load(dropInfo.value.value5.toHexString());
+
+  if (!collection) {
+    collection = new Collection(dropInfo.value.value5.toHexString());
+    collection.publisher = abPublisher.id;
+    collection.createdBlockNumber = event.block.number;
+    collection.timestamp = event.block.timestamp;
+    collection.createdTransactionHash = event.transaction.hash;
+  }
+
   if (!dropInfo.reverted) {
-    drop.dropId = dropInfo.value.value0;
-    drop.sold = dropInfo.value.value1;
-    drop.rightHolderFee = dropInfo.value.value2;
-    drop.price = dropInfo.value.value3.price;
-    drop.supply = dropInfo.value.value3.supply;
-    drop.royaltySharePerToken = dropInfo.value.value3.royaltySharePerToken;
-    drop.owner = dropInfo.value.value4.toHexString();
-    if (dropInfo.value.value5 == Address.fromString(ZERO_ADDRESS)) {
-      drop.nft = DROP_ADDRESS;
-    } else {
-      drop.nft = dropInfo.value.value5.toHexString();
-    }
+    drop.id = dropInfo.value.value0.toString();
+    drop.currentSupply = dropInfo.value.value1;
+    drop.maxSupply = dropInfo.value.value3.supply;
+    drop.sharePerToken = dropInfo.value.value3.royaltySharePerToken;
+    drop.collection = collection.id;
+    drop.type = "ERC721";
+    drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
+
     drop.save();
   }
 }
