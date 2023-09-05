@@ -137,9 +137,12 @@ export function handlePhasesUpdated(event: UpdatedPhase): void {
 
   const dropPhases = new DropPhase(dropPhasesId);
   dropPhases.drop = dropId.toString();
-  dropPhases.phases = new Array<string>(0);
 
   const numOfPhase = parseInt(event.params.numOfPhase.toString());
+  dropPhases.phases = new Array<string>(0);
+
+  const dropPhasesBuff = new Array<string>(0);
+
   for (let i = 0; i < numOfPhase; i++) {
     const phaseId = "Phase-Drop-"
       .concat(dropId.toString())
@@ -147,17 +150,16 @@ export function handlePhasesUpdated(event: UpdatedPhase): void {
       .concat(i.toString());
 
     const phase = new Phase(phaseId);
-    const phaseInfo = contract.try_phases(BigInt.fromI32(i));
-    if (!phaseInfo.reverted) {
-      phase.phaseStart = phaseInfo.value.value0;
-      phase.phaseEnd = phaseInfo.value.value1;
-      phase.price = phaseInfo.value.value2;
-      phase.maxMint = phaseInfo.value.value3;
-      phase.isPublic = phaseInfo.value.value4;
-      phase.save();
-      dropPhases.phases.push(phaseId);
-      dropPhases.save();
-    }
+    const phaseInfo = contract.phases(BigInt.fromI32(i));
+    phase.phaseStart = phaseInfo.value0;
+    phase.phaseEnd = phaseInfo.value1;
+    phase.price = phaseInfo.value2;
+    phase.maxMint = phaseInfo.value3;
+    phase.isPublic = phaseInfo.value4;
+    phase.save();
+
+    dropPhasesBuff.push(phaseId);
   }
+  dropPhases.phases = dropPhasesBuff;
   dropPhases.save();
 }
