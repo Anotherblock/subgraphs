@@ -34,13 +34,13 @@ export function handleDropCreated(event: DropCreated): void {
     drop = new Drop(event.params.dropId.toString());
   }
   const contract = ABDropManager.bind(Address.fromString(DROP_MANAGER_ADDRESS));
-  const dropInfo = contract.try_drops(event.params.dropId);
+  const dropInfo = contract.drops(event.params.dropId);
 
   let nftAddress: string;
-  if (dropInfo.value.value5.toHexString() == ZERO_ADDRESS) {
+  if (dropInfo.value5.toHexString() == ZERO_ADDRESS) {
     nftAddress = DROP_ADDRESS;
   } else {
-    nftAddress = dropInfo.value.value5.toHexString();
+    nftAddress = dropInfo.value5.toHexString();
   }
 
   let collection = Collection.load(nftAddress);
@@ -51,25 +51,24 @@ export function handleDropCreated(event: DropCreated): void {
     collection.createdBlockNumber = event.block.number;
     collection.timestamp = event.block.timestamp;
     collection.createdTransactionHash = event.transaction.hash;
+    collection.save();
   }
 
   drop.createdTransactionHash = event.transaction.hash;
   drop.createdBlockNumber = event.block.number;
   drop.timestamp = event.block.timestamp;
 
-  if (!dropInfo.reverted) {
-    drop.id = dropInfo.value.value0.toString();
-    drop.currentSupply = dropInfo.value.value1;
-    drop.maxSupply = dropInfo.value.value3.supply;
-    drop.sharePerToken = dropInfo.value.value3.royaltySharePerToken;
-    drop.collection = collection.id;
-    drop.type = "ERC721";
-    drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
+  drop.id = dropInfo.value0.toString();
+  drop.currentSupply = dropInfo.value1;
+  drop.maxSupply = dropInfo.value3.supply;
+  drop.sharePerToken = dropInfo.value3.royaltySharePerToken;
+  drop.collection = collection.id;
+  drop.type = "ERC721";
+  drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
 
-    drop.save();
+  drop.save();
 
-    Another721.create(dropInfo.value.value5);
-  }
+  Another721.create(Address.fromString(nftAddress));
 }
 
 export function handleDropUpdated(event: DropUpdated): void {
@@ -94,13 +93,13 @@ export function handleDropUpdated(event: DropUpdated): void {
     drop.timestamp = event.block.timestamp;
   }
   const contract = ABDropManager.bind(event.address);
-  const dropInfo = contract.try_drops(event.params.dropId);
+  const dropInfo = contract.drops(event.params.dropId);
 
   let nftAddress: string;
-  if (dropInfo.value.value5.toHexString() == ZERO_ADDRESS) {
+  if (dropInfo.value5.toHexString() == ZERO_ADDRESS) {
     nftAddress = DROP_ADDRESS;
   } else {
-    nftAddress = dropInfo.value.value5.toHexString();
+    nftAddress = dropInfo.value5.toHexString();
   }
 
   let collection = Collection.load(nftAddress);
@@ -113,15 +112,13 @@ export function handleDropUpdated(event: DropUpdated): void {
     collection.createdTransactionHash = event.transaction.hash;
   }
 
-  if (!dropInfo.reverted) {
-    drop.id = dropInfo.value.value0.toString();
-    drop.currentSupply = dropInfo.value.value1;
-    drop.maxSupply = dropInfo.value.value3.supply;
-    drop.sharePerToken = dropInfo.value.value3.royaltySharePerToken;
-    drop.collection = collection.id;
-    drop.type = "ERC721";
-    drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
+  drop.id = dropInfo.value0.toString();
+  drop.currentSupply = dropInfo.value1;
+  drop.maxSupply = dropInfo.value3.supply;
+  drop.sharePerToken = dropInfo.value3.royaltySharePerToken;
+  drop.collection = collection.id;
+  drop.type = "ERC721";
+  drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
 
-    drop.save();
-  }
+  drop.save();
 }
