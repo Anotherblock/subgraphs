@@ -36,10 +36,17 @@ export function handleDropCreated(event: DropCreated): void {
   const contract = ABDropManager.bind(Address.fromString(DROP_MANAGER_ADDRESS));
   const dropInfo = contract.try_drops(event.params.dropId);
 
-  let collection = Collection.load(dropInfo.value.value5.toHexString());
+  let nftAddress;
+  if (dropInfo.value.value5.toHexString() == ZERO_ADDRESS) {
+    nftAddress = DROP_ADDRESS;
+  } else {
+    nftAddress = dropInfo.value.value5.toHexString();
+  }
+
+  let collection = Collection.load(nftAddress);
 
   if (!collection) {
-    collection = new Collection(dropInfo.value.value5.toHexString());
+    collection = new Collection(nftAddress);
     collection.publisher = abPublisher.id;
     collection.createdBlockNumber = event.block.number;
     collection.timestamp = event.block.timestamp;
@@ -89,10 +96,17 @@ export function handleDropUpdated(event: DropUpdated): void {
   const contract = ABDropManager.bind(event.address);
   const dropInfo = contract.try_drops(event.params.dropId);
 
-  let collection = Collection.load(dropInfo.value.value5.toHexString());
+  let nftAddress;
+  if (dropInfo.value.value5.toHexString() == ZERO_ADDRESS) {
+    nftAddress = DROP_ADDRESS;
+  } else {
+    nftAddress = dropInfo.value.value5.toHexString();
+  }
+
+  let collection = Collection.load(nftAddress);
 
   if (!collection) {
-    collection = new Collection(dropInfo.value.value5.toHexString());
+    collection = new Collection(nftAddress);
     collection.publisher = abPublisher.id;
     collection.createdBlockNumber = event.block.number;
     collection.timestamp = event.block.timestamp;
