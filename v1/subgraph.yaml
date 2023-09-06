@@ -3,42 +3,86 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: ABPayout.json
-    network: optimism-goerli
+    name: ABDropManager
+    network: 'mainnet'
     source:
-      address: '0xeaC7aBc257CBa052Dad68F9e334E61a54ADc5740'
-      abi: ABPayout
-      startBlock: 4952884
+      address: '0x025801923B2940b7b84D81722B00267C379d6a38'
+      abi: ABDropManager
+      startBlock: 16081987
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Payout
+        - DropCreated
+        - OwnershipTransferred
       abis:
-        - name: ABPayout
-          file: ./abis/ABPayout.json
+        - name: ABDropManager
+          file: ./abis/ABDropManagerV2.json
       eventHandlers:
-        - event: Claimed(address,uint256,uint256)
-          handler: handleClaimed
-      file: ./src/mapping/payout.ts
+        - event: DropCreated(uint256)
+          handler: handleDropCreated
+        - event: DropUpdated(uint256)
+          handler: handleDropUpdated
+      file: ./src/mapping/drop-manager.ts
   - kind: ethereum
-    name: ABVault.json
-    network: optimism-goerli
+    name: AnotherPFP
+    network: 'mainnet'
     source:
-      address: '0x7ed286F43C36B42e8e37Ce82E1Ad56398A3ED4A1'
-      abi: ABVault
-      startBlock: 4952884
+      address: '0x9ffb419404a5b1b8551d0127Ed3562D9E622292E'
+      abi: AnotherPFP
+      startBlock: 15983570
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Payout
+        - Transfer
       abis:
-        - name: ABVault
-          file: ./abis/ABVault.json
+        - name: AnotherPFP
+          file: ./abis/AnotherPFP.json
       eventHandlers:
-        - event: PayoutDistributed(address,uint256,uint256)
-          handler: handleDistribute
-      file: ./src/mapping/payout.ts
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handlePfpTransfer
+      file: ./src/mapping/pfp.ts
+  - kind: ethereum
+    name: Old721V1
+    network: mainnet
+    source:
+      address: '0x9ef75b412D8466B9b35F3A1Bf7a809a5C6d0Aa7C'
+      abi: Old721V1
+      startBlock: 15320925
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: Old721V1
+          file: ./abis/Old721V1.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleOldTransfer
+      file: ./src/mapping/old721.ts
+templates:
+  - kind: ethereum
+    name: Another721
+    network: 'mainnet'
+    source:
+      abi: Another721
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: Another721
+          file: ./abis/Another721.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: UpdatedPhase(uint256)
+          handler: handlePhasesUpdated
+      file: ./src/mapping/another721.ts
