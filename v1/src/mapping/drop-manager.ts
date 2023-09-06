@@ -36,7 +36,7 @@ export function handleDropCreated(event: DropCreated): void {
   const contract = ABDropManager.bind(Address.fromString(DROP_MANAGER_ADDRESS));
   const dropInfo = contract.try_drops(event.params.dropId);
 
-  let nftAddress;
+  let nftAddress: string;
   if (dropInfo.value.value5.toHexString() == ZERO_ADDRESS) {
     nftAddress = DROP_ADDRESS;
   } else {
@@ -96,7 +96,7 @@ export function handleDropUpdated(event: DropUpdated): void {
   const contract = ABDropManager.bind(event.address);
   const dropInfo = contract.try_drops(event.params.dropId);
 
-  let nftAddress;
+  let nftAddress: string;
   if (dropInfo.value.value5.toHexString() == ZERO_ADDRESS) {
     nftAddress = DROP_ADDRESS;
   } else {

@@ -1,4 +1,4 @@
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigInt } from "@graphprotocol/graph-ts";
 
 import {
   Drop,
@@ -7,28 +7,28 @@ import {
   TokenId,
   User,
   UserHoldings,
-} from '../../generated/schema';
+} from "../../generated/schema";
 import {
   Another721,
   Transfer,
   UpdatedPhase,
-} from '../../generated/templates/Another721/Another721';
-import { ONE_BI, ZERO_ADDRESS, ZERO_BI } from '../constant';
-import { getDropId } from '../utils/utils';
+} from "../../generated/templates/Another721/Another721";
+import { ONE_BI, ZERO_ADDRESS, ZERO_BI } from "../constant";
+import { getDropId } from "../utils/utils";
 
 export function handlePhasesUpdated(event: UpdatedPhase): void {
   const contract = Another721.bind(event.address);
 
-  const dropPhasesId = 'Phases-Drop-'.concat(event.params._dropId.toString());
+  const dropPhasesId = "Phases-Drop-".concat(event.params._dropId.toString());
 
   const dropPhases = new DropPhase(dropPhasesId);
   dropPhases.drop = event.params._dropId.toString();
   dropPhases.phases = new Array<string>(0);
 
   for (let i = 0; i < 4; i++) {
-    const phaseId = 'Phase-Drop-'
+    const phaseId = "Phase-Drop-"
       .concat(event.params._dropId.toString())
-      .concat('-')
+      .concat("-")
       .concat(i.toString());
 
     const phase = new Phase(phaseId);
@@ -58,11 +58,17 @@ export function handleTransfer(event: Transfer): void {
 
   // Update the Token ID Information (TokenId entity)
   let tokenId = TokenId.load(
-    dropId.toString().concat('-').concat(event.params.tokenId.toString())
+    dropId
+      .toString()
+      .concat("-")
+      .concat(event.params.tokenId.toString())
   );
   if (!tokenId) {
     tokenId = new TokenId(
-      dropId.toString().concat('-').concat(event.params.tokenId.toString())
+      dropId
+        .toString()
+        .concat("-")
+        .concat(event.params.tokenId.toString())
     );
     tokenId.dropId = dropId.toString();
   }
@@ -80,7 +86,7 @@ export function handleTransfer(event: Transfer): void {
   newOwner.totalHoldings = newOwner.totalHoldings.plus(ONE_BI);
 
   // Update the New Owner Holdings (UserHoldings entity)
-  const newUserHoldingId = newOwnerId.concat('-'.concat(dropId.toString()));
+  const newUserHoldingId = newOwnerId.concat("-".concat(dropId.toString()));
   let newUserHoldings = UserHoldings.load(newUserHoldingId);
   if (!newUserHoldings) {
     newUserHoldings = new UserHoldings(newUserHoldingId);
@@ -91,7 +97,10 @@ export function handleTransfer(event: Transfer): void {
   }
   const tokenIds = newUserHoldings.tokenIds;
   tokenIds.push(
-    dropId.toString().concat('-').concat(event.params.tokenId.toString())
+    dropId
+      .toString()
+      .concat("-")
+      .concat(event.params.tokenId.toString())
   );
   newUserHoldings.tokenIds = tokenIds;
   let quantity = newUserHoldings.totalQuantity;
@@ -109,7 +118,7 @@ export function handleTransfer(event: Transfer): void {
       previousOwner.totalHoldings = previousOwner.totalHoldings.minus(ONE_BI);
 
       const previousUserHoldingId = previousOwnerId.concat(
-        '-'.concat(dropId.toString())
+        "-".concat(dropId.toString())
       );
 
       const previousUserHoldings = UserHoldings.load(previousUserHoldingId);
@@ -126,7 +135,7 @@ export function handleTransfer(event: Transfer): void {
             tokenIdsArray[j] ==
             dropId
               .toString()
-              .concat('-')
+              .concat("-")
               .concat(event.params.tokenId.toString())
           ) {
             tokenIdsArray.splice(j, 1);
@@ -140,9 +149,9 @@ export function handleTransfer(event: Transfer): void {
   } else {
     const drop = Drop.load(dropId.toString());
     if (drop) {
-      let dropSold = drop.sold;
+      let dropSold = drop.currentSupply;
       dropSold = dropSold.plus(ONE_BI);
-      drop.sold = dropSold;
+      drop.currentSupply = dropSold;
       drop.save();
     }
   }
