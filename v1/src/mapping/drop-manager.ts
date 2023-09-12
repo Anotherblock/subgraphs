@@ -37,7 +37,10 @@ export function handleDropCreated(event: DropCreated): void {
   const dropInfo = contract.drops(event.params.dropId);
 
   let nftAddress: string;
-  if (dropInfo.value5.toHexString() == ZERO_ADDRESS) {
+  if (
+    dropInfo.value5 == Address.fromString(ZERO_ADDRESS) &&
+    event.params.dropId != ZERO_BI
+  ) {
     nftAddress = DROP_ADDRESS;
   } else {
     nftAddress = dropInfo.value5.toHexString();
@@ -96,7 +99,10 @@ export function handleDropUpdated(event: DropUpdated): void {
   const dropInfo = contract.drops(event.params.dropId);
 
   let nftAddress: string;
-  if (dropInfo.value5.toHexString() == ZERO_ADDRESS) {
+  if (
+    dropInfo.value5 == Address.fromString(ZERO_ADDRESS) &&
+    event.params.dropId != ZERO_BI
+  ) {
     nftAddress = DROP_ADDRESS;
   } else {
     nftAddress = dropInfo.value5.toHexString();
