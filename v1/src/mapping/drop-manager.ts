@@ -1,13 +1,14 @@
-import { Address } from '@graphprotocol/graph-ts';
+import { Address } from "@graphprotocol/graph-ts";
 
 import {
   ABDropManager,
   DropCreated,
   DropUpdated,
-} from '../../generated/ABDropManager/ABDropManager';
-import { Drop } from '../../generated/schema';
-import { Another721 } from '../../generated/templates';
-import { DROP_ADDRESS, DROP_MANAGER_ADDRESS, ZERO_ADDRESS } from '../constant';
+} from "../../generated/ABDropManager/ABDropManager";
+import { Drop } from "../../generated/schema";
+import { Another721 } from "../../generated/templates";
+import { DROP_ADDRESS, DROP_MANAGER_ADDRESS, ZERO_ADDRESS } from "../constant";
+import { ZERO_BI } from "../constant.template";
 
 export function handleDropCreated(event: DropCreated): void {
   let drop = Drop.load(event.params.dropId.toString());
@@ -30,7 +31,10 @@ export function handleDropCreated(event: DropCreated): void {
     drop.supply = dropInfo.value.value3.supply;
     drop.royaltySharePerToken = dropInfo.value.value3.royaltySharePerToken;
     drop.owner = dropInfo.value.value4.toHexString();
-    if (dropInfo.value.value5 == Address.fromString(ZERO_ADDRESS)) {
+    if (
+      dropInfo.value.value5 == Address.fromString(ZERO_ADDRESS) &&
+      event.params.dropId != ZERO_BI
+    ) {
       drop.nft = DROP_ADDRESS;
     } else {
       drop.nft = dropInfo.value.value5.toHexString();
@@ -61,7 +65,10 @@ export function handleDropUpdated(event: DropUpdated): void {
     drop.supply = dropInfo.value.value3.supply;
     drop.royaltySharePerToken = dropInfo.value.value3.royaltySharePerToken;
     drop.owner = dropInfo.value.value4.toHexString();
-    if (dropInfo.value.value5 == Address.fromString(ZERO_ADDRESS)) {
+    if (
+      dropInfo.value.value5 == Address.fromString(ZERO_ADDRESS) &&
+      event.params.dropId != ZERO_BI
+    ) {
       drop.nft = DROP_ADDRESS;
     } else {
       drop.nft = dropInfo.value.value5.toHexString();
