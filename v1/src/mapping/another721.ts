@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, log } from "@graphprotocol/graph-ts";
 
 import {
   Drop,
@@ -50,19 +50,18 @@ export function handlePhasesUpdated(event: UpdatedPhase): void {
  */
 
 export function handleTransfer(event: Transfer): void {
-  // Connect to the NFT contract
-  const contract = Another721.bind(event.address);
-
-  // Get the drop ID associated to the token ID transferred
+  // Get the drop ID associated to the token transferred
   const dropId = getDropId(event.address);
 
-  // Update the Token ID Information (TokenId entity)
+  // Get the corresponding TokenId instance
   let tokenId = TokenId.load(
     dropId
       .toString()
       .concat("-")
       .concat(event.params.tokenId.toString())
   );
+
+  // If the TokenId instance does not exists, create it
   if (!tokenId) {
     tokenId = new TokenId(
       dropId
@@ -72,11 +71,15 @@ export function handleTransfer(event: Transfer): void {
     );
     tokenId.dropId = dropId.toString();
   }
-  tokenId.owner = event.params.to.toHexString();
+
+  // Update the TokenId owner
+  tokenId.owner = event.params.to.toHexString().toLowerCase();
+
+  // Save the updated TokenId instance
   tokenId.save();
 
   // Update the New Owner (User entity)
-  const newOwnerId = event.params.to.toHexString();
+  const newOwnerId = event.params.to.toHexString().toLowerCase();
   let newOwner = User.load(newOwnerId);
 
   if (!newOwner) {
@@ -84,6 +87,14 @@ export function handleTransfer(event: Transfer): void {
     newOwner.totalHoldings = ZERO_BI;
   }
   newOwner.totalHoldings = newOwner.totalHoldings.plus(ONE_BI);
+
+  if (newOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
+    log.warning("-----LOGS NEW OWNER: previous {}, new {}, hash {}", [
+      newOwner.totalHoldings.toString(),
+      newOwner.totalHoldings.plus(ONE_BI).toString(),
+      event.transaction.hash.toHexString(),
+    ]);
+  }
 
   // Update the New Owner Holdings (UserHoldings entity)
   const newUserHoldingId = newOwnerId.concat("-".concat(dropId.toString()));
@@ -110,12 +121,25 @@ export function handleTransfer(event: Transfer): void {
   newOwner.save();
 
   // Update the Previous Owner (User entity)
-  const previousOwnerId = event.params.from.toHexString();
+  const previousOwnerId = event.params.from.toHexString().toLowerCase();
   if (previousOwnerId != ZERO_ADDRESS) {
     const previousOwner = User.load(previousOwnerId);
 
+    if (!previousOwner)
+      log.warning("-----LOGS NEW PREVIOUS OWNER: hash{}", [
+        event.transaction.hash.toHexString(),
+      ]);
+
     if (previousOwner) {
       previousOwner.totalHoldings = previousOwner.totalHoldings.minus(ONE_BI);
+
+      if (previousOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
+        log.warning("-----LOGS PREVIOUS OWNER: previous {}, new {}, hash {}", [
+          previousOwner.totalHoldings.toString(),
+          previousOwner.totalHoldings.minus(ONE_BI).toString(),
+          event.transaction.hash.toHexString(),
+        ]);
+      }
 
       const previousUserHoldingId = previousOwnerId.concat(
         "-".concat(dropId.toString())

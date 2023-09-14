@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, log } from "@graphprotocol/graph-ts";
 
 import { Transfer } from "../../generated/Old721V1/Old721V1";
 import { Drop, TokenId, User, UserHoldings } from "../../generated/schema";
@@ -34,16 +34,24 @@ export function handleOldTransfer(event: Transfer): void {
     );
     tokenId.dropId = dropId.toString();
   }
-  tokenId.owner = event.params.to.toHexString();
+  tokenId.owner = event.params.to.toHexString().toLowerCase();
   tokenId.save();
 
-  const newOwnerId = event.params.to.toHexString();
+  const newOwnerId = event.params.to.toHexString().toLowerCase();
   let newOwner = User.load(newOwnerId);
   if (!newOwner) {
     newOwner = new User(newOwnerId);
     newOwner.totalHoldings = ZERO_BI;
   }
   newOwner.totalHoldings = newOwner.totalHoldings.plus(ONE_BI);
+
+  if (newOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
+    log.warning("-----LOGS NEW OWNER: previous {}, new {}, hash{}", [
+      newOwner.totalHoldings.toString(),
+      newOwner.totalHoldings.plus(ONE_BI).toString(),
+      event.transaction.hash.toHexString(),
+    ]);
+  }
 
   const newUserHoldingId = newOwnerId.concat("-".concat(dropId.toString()));
 
@@ -71,13 +79,21 @@ export function handleOldTransfer(event: Transfer): void {
   newUserHoldings.save();
   newOwner.save();
 
-  const previousOwnerId = event.params.from.toHexString();
+  const previousOwnerId = event.params.from.toHexString().toLowerCase();
 
   if (previousOwnerId != ZERO_ADDRESS) {
     const previousOwner = User.load(previousOwnerId);
 
     if (previousOwner) {
       previousOwner.totalHoldings = previousOwner.totalHoldings.minus(ONE_BI);
+
+      if (previousOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
+        log.warning("-----LOGS PREVIOUS OWNER: previous {}, new {}, hash{}", [
+          previousOwner.totalHoldings.toString(),
+          previousOwner.totalHoldings.minus(ONE_BI).toString(),
+          event.transaction.hash.toHexString(),
+        ]);
+      }
 
       const previousUserHoldingId = previousOwnerId.concat(
         "-".concat(dropId.toString())
