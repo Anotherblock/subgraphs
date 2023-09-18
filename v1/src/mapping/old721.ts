@@ -42,25 +42,6 @@ export function handleOldTransfer(event: Transfer): void {
   if (!newOwner) {
     newOwner = new User(newOwnerId);
     newOwner.totalHoldings = ZERO_BI;
-
-    if (newOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
-      log.warning(
-        "-----CREATE NEW OWNER ENTITY : id {}, totalholdings {}, hash {}",
-        [
-          newOwnerId,
-          newOwner.totalHoldings.toString(),
-          event.transaction.hash.toHexString(),
-        ]
-      );
-    }
-  }
-
-  if (newOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
-    log.warning("-----INCREMENT HOLDINGS: previous {}, new {}, hash {}", [
-      newOwner.totalHoldings.toString(),
-      newOwner.totalHoldings.plus(ONE_BI).toString(),
-      event.transaction.hash.toHexString(),
-    ]);
   }
 
   const newOwnerTotalHoldings = newOwner.totalHoldings;
@@ -97,20 +78,7 @@ export function handleOldTransfer(event: Transfer): void {
   if (previousOwnerId != ZERO_ADDRESS) {
     const previousOwner = User.load(previousOwnerId);
 
-    if (!previousOwner)
-      log.warning("-----NEW PREVIOUS OWNER: hash {}", [
-        event.transaction.hash.toHexString(),
-      ]);
-
     if (previousOwner) {
-      if (previousOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
-        log.warning("-----DECREMENT HOLDINGS: previous {}, new {}, hash {}", [
-          previousOwner.totalHoldings.toString(),
-          previousOwner.totalHoldings.minus(ONE_BI).toString(),
-          event.transaction.hash.toHexString(),
-        ]);
-      }
-
       const previousOwnerTotalHoldings = previousOwner.totalHoldings;
       previousOwner.totalHoldings = previousOwnerTotalHoldings.minus(ONE_BI);
       previousOwner.save();
