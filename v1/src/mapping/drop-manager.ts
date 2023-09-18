@@ -70,8 +70,8 @@ export function handleDropCreated(event: DropCreated): void {
   drop.royaltyCurrency = "0x5441085b042845215052df2238c02c3e0e06f0a4";
 
   drop.save();
-
-  Another721.create(Address.fromString(nftAddress));
+  if (nftAddress != DROP_ADDRESS)
+    Another721.create(Address.fromString(nftAddress));
 }
 
 export function handleDropUpdated(event: DropUpdated): void {

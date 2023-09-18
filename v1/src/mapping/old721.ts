@@ -42,16 +42,30 @@ export function handleOldTransfer(event: Transfer): void {
   if (!newOwner) {
     newOwner = new User(newOwnerId);
     newOwner.totalHoldings = ZERO_BI;
+
+    if (newOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
+      log.warning(
+        "-----CREATE NEW OWNER ENTITY : id {}, totalholdings {}, hash {}",
+        [
+          newOwnerId,
+          newOwner.totalHoldings.toString(),
+          event.transaction.hash.toHexString(),
+        ]
+      );
+    }
   }
-  newOwner.totalHoldings = newOwner.totalHoldings.plus(ONE_BI);
 
   if (newOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
-    log.warning("-----LOGS NEW OWNER: previous {}, new {}, hash{}", [
+    log.warning("-----INCREMENT HOLDINGS: previous {}, new {}, hash {}", [
       newOwner.totalHoldings.toString(),
       newOwner.totalHoldings.plus(ONE_BI).toString(),
       event.transaction.hash.toHexString(),
     ]);
   }
+
+  const newOwnerTotalHoldings = newOwner.totalHoldings;
+  newOwner.totalHoldings = newOwnerTotalHoldings.plus(ONE_BI);
+  newOwner.save();
 
   const newUserHoldingId = newOwnerId.concat("-".concat(dropId.toString()));
 
@@ -77,23 +91,29 @@ export function handleOldTransfer(event: Transfer): void {
   quantity = quantity.plus(ONE_BI);
   newUserHoldings.totalQuantity = quantity;
   newUserHoldings.save();
-  newOwner.save();
 
   const previousOwnerId = event.params.from.toHexString().toLowerCase();
 
   if (previousOwnerId != ZERO_ADDRESS) {
     const previousOwner = User.load(previousOwnerId);
 
-    if (previousOwner) {
-      previousOwner.totalHoldings = previousOwner.totalHoldings.minus(ONE_BI);
+    if (!previousOwner)
+      log.warning("-----NEW PREVIOUS OWNER: hash {}", [
+        event.transaction.hash.toHexString(),
+      ]);
 
+    if (previousOwner) {
       if (previousOwnerId == "0xf3476b36fc9942083049c04e9404516703369ef3") {
-        log.warning("-----LOGS PREVIOUS OWNER: previous {}, new {}, hash{}", [
+        log.warning("-----DECREMENT HOLDINGS: previous {}, new {}, hash {}", [
           previousOwner.totalHoldings.toString(),
           previousOwner.totalHoldings.minus(ONE_BI).toString(),
           event.transaction.hash.toHexString(),
         ]);
       }
+
+      const previousOwnerTotalHoldings = previousOwner.totalHoldings;
+      previousOwner.totalHoldings = previousOwnerTotalHoldings.minus(ONE_BI);
+      previousOwner.save();
 
       const previousUserHoldingId = previousOwnerId.concat(
         "-".concat(dropId.toString())
@@ -122,7 +142,6 @@ export function handleOldTransfer(event: Transfer): void {
         previousUserHoldings.tokenIds = tokenIdsArray;
         previousUserHoldings.save();
       }
-      previousOwner.save();
     }
   } else {
     const drop = Drop.load(dropId.toString());
