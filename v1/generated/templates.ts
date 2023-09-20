@@ -2,8 +2,9 @@
 
 import {
   Address,
-  DataSourceContext,
-  DataSourceTemplate} from "@graphprotocol/graph-ts";
+  DataSourceTemplate,
+  DataSourceContext
+} from "@graphprotocol/graph-ts";
 
 export class Another721 extends DataSourceTemplate {
   static create(address: Address): void {

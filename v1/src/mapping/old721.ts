@@ -1,8 +1,8 @@
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigInt, log } from "@graphprotocol/graph-ts";
 
-import { Transfer } from '../../generated/Old721V1/Old721V1';
-import { Drop, TokenId, User, UserHoldings } from '../../generated/schema';
-import {ONE_BI, ZERO_ADDRESS, ZERO_BI } from '../constant';
+import { Transfer } from "../../generated/Old721V1/Old721V1";
+import { Drop, TokenId, User, UserHoldings } from "../../generated/schema";
+import { ONE_BI, ZERO_ADDRESS, ZERO_BI } from "../constant";
 
 /**
  *  TRANSFER HANDLER
@@ -20,26 +20,35 @@ export function handleOldTransfer(event: Transfer): void {
 
   // Update the Token ID Information (TokenId entity)
   let tokenId = TokenId.load(
-    dropId.toString().concat('-').concat(event.params.tokenId.toString())
+    dropId
+      .toString()
+      .concat("-")
+      .concat(event.params.tokenId.toString())
   );
   if (!tokenId) {
     tokenId = new TokenId(
-      dropId.toString().concat('-').concat(event.params.tokenId.toString())
+      dropId
+        .toString()
+        .concat("-")
+        .concat(event.params.tokenId.toString())
     );
     tokenId.dropId = dropId.toString();
   }
-  tokenId.owner = event.params.to.toHexString();
+  tokenId.owner = event.params.to.toHexString().toLowerCase();
   tokenId.save();
 
-  const newOwnerId = event.params.to.toHexString();
+  const newOwnerId = event.params.to.toHexString().toLowerCase();
   let newOwner = User.load(newOwnerId);
   if (!newOwner) {
     newOwner = new User(newOwnerId);
     newOwner.totalHoldings = ZERO_BI;
   }
-  newOwner.totalHoldings = newOwner.totalHoldings.plus(ONE_BI);
 
-  const newUserHoldingId = newOwnerId.concat('-'.concat(dropId.toString()));
+  const newOwnerTotalHoldings = newOwner.totalHoldings;
+  newOwner.totalHoldings = newOwnerTotalHoldings.plus(ONE_BI);
+  newOwner.save();
+
+  const newUserHoldingId = newOwnerId.concat("-".concat(dropId.toString()));
 
   let newUserHoldings = UserHoldings.load(newUserHoldingId);
 
@@ -53,25 +62,29 @@ export function handleOldTransfer(event: Transfer): void {
 
   const tokenIds = newUserHoldings.tokenIds;
   tokenIds.push(
-    dropId.toString().concat('-').concat(event.params.tokenId.toString())
+    dropId
+      .toString()
+      .concat("-")
+      .concat(event.params.tokenId.toString())
   );
   newUserHoldings.tokenIds = tokenIds;
   let quantity = newUserHoldings.totalQuantity;
   quantity = quantity.plus(ONE_BI);
   newUserHoldings.totalQuantity = quantity;
   newUserHoldings.save();
-  newOwner.save();
 
-  const previousOwnerId = event.params.from.toHexString();
+  const previousOwnerId = event.params.from.toHexString().toLowerCase();
 
   if (previousOwnerId != ZERO_ADDRESS) {
     const previousOwner = User.load(previousOwnerId);
 
     if (previousOwner) {
-      previousOwner.totalHoldings = previousOwner.totalHoldings.minus(ONE_BI);
+      const previousOwnerTotalHoldings = previousOwner.totalHoldings;
+      previousOwner.totalHoldings = previousOwnerTotalHoldings.minus(ONE_BI);
+      previousOwner.save();
 
       const previousUserHoldingId = previousOwnerId.concat(
-        '-'.concat(dropId.toString())
+        "-".concat(dropId.toString())
       );
 
       const previousUserHoldings = UserHoldings.load(previousUserHoldingId);
@@ -88,7 +101,7 @@ export function handleOldTransfer(event: Transfer): void {
             tokenIdsArray[j] ==
             dropId
               .toString()
-              .concat('-')
+              .concat("-")
               .concat(event.params.tokenId.toString())
           ) {
             tokenIdsArray.splice(j, 1);
@@ -97,15 +110,14 @@ export function handleOldTransfer(event: Transfer): void {
         previousUserHoldings.tokenIds = tokenIdsArray;
         previousUserHoldings.save();
       }
-      previousOwner.save();
     }
   } else {
     const drop = Drop.load(dropId.toString());
 
     if (drop) {
-      let dropSold = drop.sold;
+      let dropSold = drop.currentSupply;
       dropSold = dropSold.plus(ONE_BI);
-      drop.sold = dropSold;
+      drop.currentSupply = dropSold;
       drop.save();
     }
   }
