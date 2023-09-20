@@ -7,5 +7,9 @@
     "prepare:base-goerli": "mustache config/base-goerli.json subgraph.template.yaml > subgraph.yaml",
     "prepare:optimism": "mustache config/optimism.json subgraph.template.yml > subgraph.yaml",
     "prepare:optimism-goerli": "mustache config/optimism-goerli.json subgraph.template.yml > subgraph.yaml"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.5.0",
+    "mustache": "^4.2.0"
   }
 }
