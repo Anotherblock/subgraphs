@@ -63,7 +63,10 @@ export function handleDropRegistered(event: DropRegistered): void {
 
   if (event.params.tokenId == BigInt.fromI32(0)) {
     let nftContract = ERC721AB.bind(event.params.nft);
-    maxSupply = nftContract.maxSupply();
+    const maxSupplyCall = nftContract.try_maxSupply();
+    if (!maxSupplyCall.reverted) {
+      maxSupply = nftContract.maxSupply();
+    }
     currentSupply = nftContract.totalSupply();
     sharePerToken = nftContract.sharePerToken();
     type = "ERC721";

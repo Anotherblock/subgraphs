@@ -335,6 +335,29 @@ export class ERC721AB extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
+  IMPLEMENTATION_TYPE(): Bytes {
+    let result = super.call(
+      "IMPLEMENTATION_TYPE",
+      "IMPLEMENTATION_TYPE():(bytes32)",
+      []
+    );
+
+    return result[0].toBytes();
+  }
+
+  try_IMPLEMENTATION_TYPE(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "IMPLEMENTATION_TYPE",
+      "IMPLEMENTATION_TYPE():(bytes32)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+
   abDataRegistry(): Address {
     let result = super.call("abDataRegistry", "abDataRegistry():(address)", []);
 
