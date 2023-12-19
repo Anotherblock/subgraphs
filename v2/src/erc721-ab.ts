@@ -151,9 +151,10 @@ export function handlePhasesUpdated(event: UpdatedPhase): void {
     const phaseInfo = contract.phases(BigInt.fromI32(i));
     phase.phaseStart = phaseInfo.value0;
     phase.phaseEnd = phaseInfo.value1;
-    phase.price = phaseInfo.value2;
-    phase.maxMint = phaseInfo.value3;
-    phase.isPublic = phaseInfo.value4;
+    phase.priceETH = phaseInfo.value2;
+    phase.priceERC20 = phaseInfo.value3;
+    phase.maxMint = phaseInfo.value4;
+    phase.isPublic = phaseInfo.value5;
     phase.save();
 
     dropPhasesBuff.push(phaseId);
