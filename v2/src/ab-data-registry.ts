@@ -68,7 +68,11 @@ export function handleDropRegistered(event: DropRegistered): void {
     if (!maxSupplyCall.reverted) {
       maxSupply = nftContract.maxSupply();
     }
-    acceptedCurrency = nftContract.acceptedCurrency();
+    const acceptedCurrencyCall = nftContract.try_acceptedCurrency();
+    if (!acceptedCurrencyCall.reverted) {
+      acceptedCurrency = nftContract.acceptedCurrency();
+    }
+
     currentSupply = nftContract.totalSupply();
     sharePerToken = nftContract.sharePerToken();
     type = "ERC721";
