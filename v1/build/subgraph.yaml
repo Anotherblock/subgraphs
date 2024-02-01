@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: ABDropManager
-    network: mainnet
+    network: goerli
     source:
-      address: "0x025801923B2940b7b84D81722B00267C379d6a38"
+      address: "0xc95b9881e19E8B767a4E9Ba9Dc492DBFBe908d18"
       abi: ABDropManager
-      startBlock: 16081987
+      startBlock: 8490787
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -27,11 +27,11 @@ dataSources:
       file: ABDropManager/ABDropManager.wasm
   - kind: ethereum
     name: AnotherPFP
-    network: mainnet
+    network: goerli
     source:
-      address: "0x9ffb419404a5b1b8551d0127Ed3562D9E622292E"
+      address: "0x7A7048dEfbd1f58d4479fB3bf6EC46aa02521b08"
       abi: AnotherPFP
-      startBlock: 15983570
+      startBlock: 8420468
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -47,7 +47,7 @@ dataSources:
       file: AnotherPFP/AnotherPFP.wasm
   - kind: ethereum
     name: Old721V1
-    network: mainnet
+    network: goerli
     source:
       address: "0x9ef75b412D8466B9b35F3A1Bf7a809a5C6d0Aa7C"
       abi: Old721V1
@@ -68,7 +68,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Another721
-    network: mainnet
+    network: goerli
     source:
       abi: Another721
     mapping:
