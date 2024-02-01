@@ -23,6 +23,7 @@ type Drop @entity {
   currentSupply: BigInt!
   sharePerToken: BigInt!
   royaltyCurrency: String!
+  acceptedCurrency: String!
   createdBlockNumber: BigInt!
   timestamp: BigInt!
   createdTransactionHash: Bytes!
@@ -38,7 +39,8 @@ type Phase @entity {
   id: String!
   phaseStart: BigInt!
   phaseEnd: BigInt!
-  price: BigInt!
+  priceETH: BigInt!
+  priceERC20: BigInt!
   maxMint: BigInt!
   isPublic: Boolean!
 }

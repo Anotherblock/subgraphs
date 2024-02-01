@@ -59,6 +59,7 @@ export function handleDropRegistered(event: DropRegistered): void {
   let maxSupply = BigInt.fromI32(0);
   let currentSupply = BigInt.fromI32(0);
   let sharePerToken = BigInt.fromI32(0);
+  let acceptedCurrency = new Address(0);
   let type = "undefined";
 
   if (event.params.tokenId == BigInt.fromI32(0)) {
@@ -67,6 +68,11 @@ export function handleDropRegistered(event: DropRegistered): void {
     if (!maxSupplyCall.reverted) {
       maxSupply = nftContract.maxSupply();
     }
+    const acceptedCurrencyCall = nftContract.try_acceptedCurrency();
+    if (!acceptedCurrencyCall.reverted) {
+      acceptedCurrency = nftContract.acceptedCurrency();
+    }
+
     currentSupply = nftContract.totalSupply();
     sharePerToken = nftContract.sharePerToken();
     type = "ERC721";
@@ -92,6 +98,7 @@ export function handleDropRegistered(event: DropRegistered): void {
   drop.currentSupply = currentSupply;
   drop.sharePerToken = sharePerToken;
   drop.royaltyCurrency = royaltyCurrency.toHexString();
+  drop.acceptedCurrency = acceptedCurrency.toHexString();
 
   drop.createdTransactionHash = event.transaction.hash;
   drop.createdBlockNumber = event.block.number;

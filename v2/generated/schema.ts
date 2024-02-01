@@ -325,6 +325,19 @@ export class Drop extends Entity {
     this.set("royaltyCurrency", Value.fromString(value));
   }
 
+  get acceptedCurrency(): string {
+    let value = this.get("acceptedCurrency");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set acceptedCurrency(value: string) {
+    this.set("acceptedCurrency", Value.fromString(value));
+  }
+
   get createdBlockNumber(): BigInt {
     let value = this.get("createdBlockNumber");
     if (!value || value.kind == ValueKind.NULL) {
@@ -496,8 +509,8 @@ export class Phase extends Entity {
     this.set("phaseEnd", Value.fromBigInt(value));
   }
 
-  get price(): BigInt {
-    let value = this.get("price");
+  get priceETH(): BigInt {
+    let value = this.get("priceETH");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -505,8 +518,21 @@ export class Phase extends Entity {
     }
   }
 
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
+  set priceETH(value: BigInt) {
+    this.set("priceETH", Value.fromBigInt(value));
+  }
+
+  get priceERC20(): BigInt {
+    let value = this.get("priceERC20");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set priceERC20(value: BigInt) {
+    this.set("priceERC20", Value.fromBigInt(value));
   }
 
   get maxMint(): BigInt {

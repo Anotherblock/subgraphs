@@ -6,6 +6,8 @@ import {
   UpdatedPhase,
 } from "../generated/templates/ERC721AB/ERC721AB";
 
+import { ERC721ABv1 } from "../generated/templates/ERC721AB/ERC721ABv1";
+
 import {
   Drop,
   DropPhase,
@@ -126,7 +128,7 @@ export function handleTransfer(event: Transfer): void {
 
 export function handlePhasesUpdated(event: UpdatedPhase): void {
   // Connect to the NFT contract
-  const contract = ERC721AB.bind(event.address);
+  let contract = ERC721AB.bind(event.address);
 
   // Get the drop ID associated to the token ID transferred
   const dropId = contract.dropId();
@@ -148,13 +150,29 @@ export function handlePhasesUpdated(event: UpdatedPhase): void {
       .concat(i.toString());
 
     const phase = new Phase(phaseId);
-    const phaseInfo = contract.phases(BigInt.fromI32(i));
-    phase.phaseStart = phaseInfo.value0;
-    phase.phaseEnd = phaseInfo.value1;
-    phase.price = phaseInfo.value2;
-    phase.maxMint = phaseInfo.value3;
-    phase.isPublic = phaseInfo.value4;
-    phase.save();
+    const phaseInfoCall = contract.try_phases(BigInt.fromI32(i));
+    if (!phaseInfoCall.reverted) {
+      const phaseInfo = contract.phases(BigInt.fromI32(i));
+
+      phase.phaseStart = phaseInfo.value0;
+      phase.phaseEnd = phaseInfo.value1;
+      phase.priceETH = phaseInfo.value2;
+      phase.priceERC20 = phaseInfo.value3;
+      phase.maxMint = phaseInfo.value4;
+      phase.isPublic = phaseInfo.value5;
+      phase.save();
+    } else {
+      let contractV1 = ERC721ABv1.bind(event.address);
+      const phaseInfo = contractV1.phases(BigInt.fromI32(i));
+
+      phase.phaseStart = phaseInfo.value0;
+      phase.phaseEnd = phaseInfo.value1;
+      phase.priceETH = phaseInfo.value2;
+      phase.priceERC20 = BigInt.fromI32(0);
+      phase.maxMint = phaseInfo.value3;
+      phase.isPublic = phaseInfo.value4;
+      phase.save();
+    }
 
     dropPhasesBuff.push(phaseId);
   }

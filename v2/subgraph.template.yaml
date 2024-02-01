@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum
     name: AnotherCloneFactory
-    network: '{{network}}'
+    network: "{{network}}"
     source:
-      address: '{{ANOTHER_CLONE_FACTORY_ADDRESS}}'
+      address: "{{ANOTHER_CLONE_FACTORY_ADDRESS}}"
       abi: AnotherCloneFactory
       startBlock: {{block}}
     mapping:
@@ -24,9 +24,9 @@ dataSources:
       file: ./src/another-clone-factory.ts
   - kind: ethereum
     name: ABDataRegistry
-    network: '{{network}}'
+    network: "{{network}}"
     source:
-      address: '{{AB_DATA_REGISTRY}}'
+      address: "{{AB_DATA_REGISTRY}}"
       abi: ABDataRegistry
       startBlock: {{block}}
     mapping:
@@ -55,7 +55,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: ERC721AB
-    network: '{{network}}'
+    network: "{{network}}"
     source:
       abi: ERC721AB
     mapping:
@@ -67,6 +67,8 @@ templates:
       abis:
         - name: ERC721AB
           file: ./abis/ERC721AB.json
+        - name: ERC721ABv1
+          file: ./abis/ERC721ABv1.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer

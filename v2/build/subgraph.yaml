@@ -67,6 +67,8 @@ templates:
       abis:
         - name: ERC721AB
           file: ERC721AB/abis/ERC721AB.json
+        - name: ERC721ABv1
+          file: ERC721AB/abis/ERC721ABv1.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
