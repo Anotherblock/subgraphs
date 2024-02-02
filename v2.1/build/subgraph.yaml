@@ -1,0 +1,33 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ABClaim
+    network: base-testnet
+    source:
+      address: "0x47Af0b5B9175001A769B8d36416577778706E112"
+      abi: ABClaim
+      startBlock: 15370847
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - RoyaltyDistributed
+        - RoyaltyClaimed
+        - HoldingsUpdated
+        - HoldingsBatchUpdated
+      abis:
+        - name: ABClaim
+          file: ABClaim/abis/ABClaim.json
+      eventHandlers:
+        - event: RoyaltyDistributed(uint256[],uint256[])
+          handler: handleRoyaltyDistributed
+        - event: RoyaltyClaimed(uint256,uint256[],uint256)
+          handler: handleRoyaltyClaimed
+        - event: HoldingsUpdated(uint256,uint256,address)
+          handler: handleHoldingsUpdated
+        - event: HoldingsBatchUpdated(uint256,uint256[],address[])
+          handler: handleHoldingsBatchUpdated
+      file: ABClaim/ABClaim.wasm
