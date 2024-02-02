@@ -712,7 +712,7 @@
   },
   {
     "type": "event",
-    "name": "RoyaltyDistributed",
+    "name": "RoyaltyDistributedMultiDrop",
     "inputs": [
       {
         "name": "dropIds",

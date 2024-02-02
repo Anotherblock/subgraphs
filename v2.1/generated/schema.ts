@@ -119,15 +119,6 @@ export class Claim extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get user(): string {
-    let value = this.get("user");
-    return value!.toString();
-  }
-
-  set user(value: string) {
-    this.set("user", Value.fromString(value));
-  }
-
   get amount(): BigInt {
     let value = this.get("amount");
     return value!.toBigInt();
@@ -214,12 +205,20 @@ export class TokenId extends Entity {
     this.set("claimed", Value.fromBigInt(value));
   }
 
-  get owner(): string {
+  get owner(): string | null {
     let value = this.get("owner");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set owner(value: string) {
-    this.set("owner", Value.fromString(value));
+  set owner(value: string | null) {
+    if (!value) {
+      this.unset("owner");
+    } else {
+      this.set("owner", Value.fromString(<string>value));
+    }
   }
 }

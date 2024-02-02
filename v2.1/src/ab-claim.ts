@@ -15,12 +15,84 @@ export function handleRoyaltyDistributedMultiDrop(
   event: RoyaltyDistributedMultiDrop
 ): void {
   let dropsIds = event.params.dropIds;
+
+  for (let i = 0; i < dropsIds.length; i++) {
+    const id =
+      event.params.dropIds[i].toString() +
+      "-" +
+      event.transaction.hash.toHexString();
+    const payout = new Payout(id);
+    payout.dropId = event.params.dropIds[i];
+    payout.amount = event.params.amount[i];
+    payout.createdBlockNumber = event.block.number;
+    payout.createdTransactionHash = event.transaction.hash;
+    payout.timestamp = event.block.timestamp;
+    payout.save();
+  }
 }
 
 export function handleRoyaltyDistributedSingleDrop(
   event: RoyaltyDistributed
-): void {}
+): void {
+  const id =
+    event.params.dropId.toString() + "-" + event.transaction.hash.toHexString();
+  const payout = new Payout(id);
+  payout.dropId = event.params.dropId;
+  payout.amount = event.params.amount;
+  payout.createdBlockNumber = event.block.number;
+  payout.createdTransactionHash = event.transaction.hash;
+  payout.timestamp = event.block.timestamp;
+  payout.save();
+}
 
-export function handleRoyaltyClaimed(event: RoyaltyClaimed): void {}
-export function handleHoldingsUpdated(event: HoldingsUpdated): void {}
-export function handleHoldingsBatchUpdated(event: HoldingsBatchUpdated): void {}
+export function handleRoyaltyClaimed(event: RoyaltyClaimed): void {
+  // const id =
+  //   event.params.dropId.toHexString() + event.transaction.hash.toHexString();
+  // const claim = new Claim(id);
+}
+
+export function handleHoldingsUpdated(event: HoldingsUpdated): void {
+  let contract = ABClaim.bind(event.address);
+
+  let tokenId = TokenId.load(
+    event.params.dropId.toString() + "-" + event.params.tokenId.toString()
+  );
+
+  if (!tokenId) {
+    tokenId = new TokenId(
+      event.params.dropId.toString() + "-" + event.params.tokenId.toString()
+    );
+  }
+  tokenId.dropId = event.params.dropId;
+  tokenId.claimed = contract.claimedAmount(
+    event.params.dropId,
+    event.params.tokenId
+  );
+  tokenId.owner = event.params.newOwner.toHexString();
+  tokenId.save();
+}
+
+export function handleHoldingsBatchUpdated(event: HoldingsBatchUpdated): void {
+  let contract = ABClaim.bind(event.address);
+
+  for (let i = 0; i < event.params.tokenIds.length; i++) {
+    let tokenId = TokenId.load(
+      event.params.dropId.toString() + "-" + event.params.tokenIds[i].toString()
+    );
+
+    if (!tokenId) {
+      tokenId = new TokenId(
+        event.params.dropId.toString() +
+          "-" +
+          event.params.tokenIds[i].toString()
+      );
+    }
+    tokenId.dropId = event.params.dropId;
+    tokenId.claimed = contract.claimedAmount(
+      event.params.dropId,
+      event.params.tokenIds[i]
+    );
+    tokenId.owner = event.params.newOwners[i].toHexString();
+    tokenId.save();
+  }
+}

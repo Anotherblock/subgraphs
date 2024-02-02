@@ -22,8 +22,10 @@ dataSources:
         - name: ABClaim
           file: ABClaim/abis/ABClaim.json
       eventHandlers:
-        - event: RoyaltyDistributed(uint256[],uint256[])
-          handler: handleRoyaltyDistributed
+        - event: RoyaltyDistributedMultiDrop(uint256[],uint256[])
+          handler: handleRoyaltyDistributedMultiDrop
+        - event: RoyaltyDistributed(uint256,uint256)
+          handler: handleRoyaltyDistributedSingleDrop
         - event: RoyaltyClaimed(uint256,uint256[],uint256)
           handler: handleRoyaltyClaimed
         - event: HoldingsUpdated(uint256,uint256,address)
