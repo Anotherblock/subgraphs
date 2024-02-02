@@ -78,13 +78,13 @@ export class Payout extends Entity {
     this.set("timestamp", Value.fromBigInt(value));
   }
 
-  get createdTransactionHash(): Bytes {
-    let value = this.get("createdTransactionHash");
+  get transactionHash(): Bytes {
+    let value = this.get("transactionHash");
     return value!.toBytes();
   }
 
-  set createdTransactionHash(value: Bytes) {
-    this.set("createdTransactionHash", Value.fromBytes(value));
+  set transactionHash(value: Bytes) {
+    this.set("transactionHash", Value.fromBytes(value));
   }
 }
 
@@ -128,13 +128,22 @@ export class Claim extends Entity {
     this.set("amount", Value.fromBigInt(value));
   }
 
-  get tokenId(): string {
-    let value = this.get("tokenId");
-    return value!.toString();
+  get dropId(): BigInt {
+    let value = this.get("dropId");
+    return value!.toBigInt();
   }
 
-  set tokenId(value: string) {
-    this.set("tokenId", Value.fromString(value));
+  set dropId(value: BigInt) {
+    this.set("dropId", Value.fromBigInt(value));
+  }
+
+  get tokenIds(): Array<string> {
+    let value = this.get("tokenIds");
+    return value!.toStringArray();
+  }
+
+  set tokenIds(value: Array<string>) {
+    this.set("tokenIds", Value.fromStringArray(value));
   }
 
   get transactionHash(): Bytes {

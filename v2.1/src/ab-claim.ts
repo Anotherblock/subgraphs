@@ -25,7 +25,7 @@ export function handleRoyaltyDistributedMultiDrop(
     payout.dropId = event.params.dropIds[i];
     payout.amount = event.params.amount[i];
     payout.createdBlockNumber = event.block.number;
-    payout.createdTransactionHash = event.transaction.hash;
+    payout.transactionHash = event.transaction.hash;
     payout.timestamp = event.block.timestamp;
     payout.save();
   }
@@ -40,15 +40,41 @@ export function handleRoyaltyDistributedSingleDrop(
   payout.dropId = event.params.dropId;
   payout.amount = event.params.amount;
   payout.createdBlockNumber = event.block.number;
-  payout.createdTransactionHash = event.transaction.hash;
+  payout.transactionHash = event.transaction.hash;
   payout.timestamp = event.block.timestamp;
   payout.save();
 }
 
 export function handleRoyaltyClaimed(event: RoyaltyClaimed): void {
-  // const id =
-  //   event.params.dropId.toHexString() + event.transaction.hash.toHexString();
-  // const claim = new Claim(id);
+  let contract = ABClaim.bind(event.address);
+
+  const id =
+    event.params.dropId.toString() + "-" + event.transaction.hash.toHexString();
+  const claim = new Claim(id);
+  claim.amount = event.params.amount;
+  claim.dropId = event.params.dropId;
+  claim.transactionHash = event.transaction.hash;
+  claim.timestamp = event.block.timestamp;
+  claim.tokenIds = new Array<string>(0);
+
+  const tokenIds = claim.tokenIds;
+
+  for (let i = 0; i < event.params.tokenIds.length; i++) {
+    let tokenId = TokenId.load(
+      event.params.dropId.toString() + "-" + event.params.tokenIds[i].toString()
+    );
+
+    tokenId!.claimed = contract.claimedAmount(
+      event.params.dropId,
+      event.params.tokenIds[i]
+    );
+    tokenId!.save();
+
+    tokenIds.push(tokenId!.id);
+  }
+  claim.tokenIds = tokenIds;
+
+  claim.save();
 }
 
 export function handleHoldingsUpdated(event: HoldingsUpdated): void {

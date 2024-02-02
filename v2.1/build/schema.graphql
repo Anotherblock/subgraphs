@@ -4,13 +4,14 @@ type Payout @entity {
   amount: BigInt!
   createdBlockNumber: BigInt!
   timestamp: BigInt!
-  createdTransactionHash: Bytes!
+  transactionHash: Bytes!
 }
 
 type Claim @entity {
   id: String!
   amount: BigInt!
-  tokenId: TokenId!
+  dropId: BigInt!
+  tokenIds: [TokenId!]!
   transactionHash: Bytes!
   timestamp: BigInt!
 }
