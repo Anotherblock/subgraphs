@@ -7,6 +7,8 @@ import {
   HoldingsBatchUpdated,
   HoldingsUpdated,
   RoyaltyDistributedMultiDrop,
+  DropDataUpdated,
+  DropDataBatchUpdated,
 } from "../generated/ABClaim/ABClaim";
 
 import { Payout, Claim, TokenId } from "../generated/schema";
@@ -121,4 +123,48 @@ export function handleHoldingsBatchUpdated(event: HoldingsBatchUpdated): void {
     tokenId.owner = event.params.newOwners[i].toHexString();
     tokenId.save();
   }
+}
+
+export function handleDropDataUpdated(event: DropDataUpdated): void {
+  let contract = ABClaim.bind(event.address);
+
+  for (let i = 1; i <= parseInt(event.params.supply.toString()); i++) {
+    let tokenId = TokenId.load(
+      event.params.dropId.toString() + "-" + i.toString()
+    );
+
+    if (!tokenId) {
+      tokenId = new TokenId(
+        event.params.dropId.toString() + "-" + i.toString()
+      );
+    }
+    tokenId.dropId = event.params.dropId;
+    tokenId.claimed = contract.claimedAmount(
+      event.params.dropId,
+      new BigInt(i)
+    );
+    tokenId.save();
+  }
+}
+export function handleDropDataBatchUpdated(event: DropDataBatchUpdated): void {
+  let contract = ABClaim.bind(event.address);
+
+  for (let j = 0; j < event.params.dropId.length; j++)
+    for (let i = 1; i <= parseInt(event.params.supply[j].toString()); i++) {
+      let tokenId = TokenId.load(
+        event.params.dropId[j].toString() + "-" + i.toString()
+      );
+
+      if (!tokenId) {
+        tokenId = new TokenId(
+          event.params.dropId[j].toString() + "-" + i.toString()
+        );
+      }
+      tokenId.dropId = event.params.dropId[j];
+      tokenId.claimed = contract.claimedAmount(
+        event.params.dropId[j],
+        new BigInt(i)
+      );
+      tokenId.save();
+    }
 }

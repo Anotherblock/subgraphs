@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class Initialized extends ethereum.Event {
@@ -228,6 +228,66 @@ export class RoyaltyDistributedMultiDrop__Params {
   }
 }
 
+export class DropDataBatchUpdated extends ethereum.Event {
+  get params(): DropDataBatchUpdated__Params {
+    return new DropDataBatchUpdated__Params(this);
+  }
+}
+
+export class DropDataBatchUpdated__Params {
+  _event: DropDataBatchUpdated;
+
+  constructor(event: DropDataBatchUpdated) {
+    this._event = event;
+  }
+
+  get dropId(): Array<BigInt> {
+    return this._event.parameters[0].value.toBigIntArray();
+  }
+
+  get nft(): Array<Address> {
+    return this._event.parameters[1].value.toAddressArray();
+  }
+
+  get isL1(): Array<boolean> {
+    return this._event.parameters[2].value.toBooleanArray();
+  }
+
+  get supply(): Array<BigInt> {
+    return this._event.parameters[3].value.toBigIntArray();
+  }
+}
+
+export class DropDataUpdated extends ethereum.Event {
+  get params(): DropDataUpdated__Params {
+    return new DropDataUpdated__Params(this);
+  }
+}
+
+export class DropDataUpdated__Params {
+  _event: DropDataUpdated;
+
+  constructor(event: DropDataUpdated) {
+    this._event = event;
+  }
+
+  get dropId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get nft(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get isL1(): boolean {
+    return this._event.parameters[2].value.toBoolean();
+  }
+
+  get supply(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+}
+
 export class ABClaim__dropDataResult {
   value0: Address;
   value1: boolean;
@@ -269,7 +329,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.call(
       "DEFAULT_ADMIN_ROLE",
       "DEFAULT_ADMIN_ROLE():(bytes32)",
-      []
+      [],
     );
 
     return result[0].toBytes();
@@ -279,7 +339,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.tryCall(
       "DEFAULT_ADMIN_ROLE",
       "DEFAULT_ADMIN_ROLE():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -339,8 +399,8 @@ export class ABClaim extends ethereum.SmartContract {
       "claimedAmount(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(dropId),
-        ethereum.Value.fromUnsignedBigInt(tokenId)
-      ]
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+      ],
     );
 
     return result[0].toBigInt();
@@ -348,15 +408,15 @@ export class ABClaim extends ethereum.SmartContract {
 
   try_claimedAmount(
     dropId: BigInt,
-    tokenId: BigInt
+    tokenId: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "claimedAmount",
       "claimedAmount(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(dropId),
-        ethereum.Value.fromUnsignedBigInt(tokenId)
-      ]
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -369,13 +429,13 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.call(
       "dropData",
       "dropData(uint256):(address,bool,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(dropId)]
+      [ethereum.Value.fromUnsignedBigInt(dropId)],
     );
 
     return new ABClaim__dropDataResult(
       result[0].toAddress(),
       result[1].toBoolean(),
-      result[2].toBigInt()
+      result[2].toBigInt(),
     );
   }
 
@@ -383,7 +443,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.tryCall(
       "dropData",
       "dropData(uint256):(address,bool,uint256)",
-      [ethereum.Value.fromUnsignedBigInt(dropId)]
+      [ethereum.Value.fromUnsignedBigInt(dropId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -393,8 +453,8 @@ export class ABClaim extends ethereum.SmartContract {
       new ABClaim__dropDataResult(
         value[0].toAddress(),
         value[1].toBoolean(),
-        value[2].toBigInt()
-      )
+        value[2].toBigInt(),
+      ),
     );
   }
 
@@ -404,8 +464,8 @@ export class ABClaim extends ethereum.SmartContract {
       "getClaimableAmount(uint256,uint256[]):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(_dropId),
-        ethereum.Value.fromUnsignedBigIntArray(_tokenIds)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(_tokenIds),
+      ],
     );
 
     return result[0].toBigInt();
@@ -413,15 +473,15 @@ export class ABClaim extends ethereum.SmartContract {
 
   try_getClaimableAmount(
     _dropId: BigInt,
-    _tokenIds: Array<BigInt>
+    _tokenIds: Array<BigInt>,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getClaimableAmount",
       "getClaimableAmount(uint256,uint256[]):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(_dropId),
-        ethereum.Value.fromUnsignedBigIntArray(_tokenIds)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(_tokenIds),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -436,8 +496,8 @@ export class ABClaim extends ethereum.SmartContract {
       "getClaimableAmount(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(_dropId),
-        ethereum.Value.fromUnsignedBigInt(_tokenId)
-      ]
+        ethereum.Value.fromUnsignedBigInt(_tokenId),
+      ],
     );
 
     return result[0].toBigInt();
@@ -445,15 +505,15 @@ export class ABClaim extends ethereum.SmartContract {
 
   try_getClaimableAmount1(
     _dropId: BigInt,
-    _tokenId: BigInt
+    _tokenId: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getClaimableAmount",
       "getClaimableAmount(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(_dropId),
-        ethereum.Value.fromUnsignedBigInt(_tokenId)
-      ]
+        ethereum.Value.fromUnsignedBigInt(_tokenId),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -464,7 +524,7 @@ export class ABClaim extends ethereum.SmartContract {
 
   getRoleAdmin(role: Bytes): Bytes {
     let result = super.call("getRoleAdmin", "getRoleAdmin(bytes32):(bytes32)", [
-      ethereum.Value.fromFixedBytes(role)
+      ethereum.Value.fromFixedBytes(role),
     ]);
 
     return result[0].toBytes();
@@ -474,7 +534,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.tryCall(
       "getRoleAdmin",
       "getRoleAdmin(bytes32):(bytes32)",
-      [ethereum.Value.fromFixedBytes(role)]
+      [ethereum.Value.fromFixedBytes(role)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -486,7 +546,7 @@ export class ABClaim extends ethereum.SmartContract {
   hasRole(role: Bytes, account: Address): boolean {
     let result = super.call("hasRole", "hasRole(bytes32,address):(bool)", [
       ethereum.Value.fromFixedBytes(role),
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBoolean();
@@ -495,7 +555,7 @@ export class ABClaim extends ethereum.SmartContract {
   try_hasRole(role: Bytes, account: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("hasRole", "hasRole(bytes32,address):(bool)", [
       ethereum.Value.fromFixedBytes(role),
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -507,7 +567,7 @@ export class ABClaim extends ethereum.SmartContract {
   ownerOf(dropId: BigInt, tokenId: BigInt): Address {
     let result = super.call("ownerOf", "ownerOf(uint256,uint256):(address)", [
       ethereum.Value.fromUnsignedBigInt(dropId),
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
 
     return result[0].toAddress();
@@ -519,8 +579,8 @@ export class ABClaim extends ethereum.SmartContract {
       "ownerOf(uint256,uint256):(address)",
       [
         ethereum.Value.fromUnsignedBigInt(dropId),
-        ethereum.Value.fromUnsignedBigInt(tokenId)
-      ]
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -533,7 +593,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -543,7 +603,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -556,7 +616,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.call(
       "totalDepositedPerDrop",
       "totalDepositedPerDrop(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(dropId)]
+      [ethereum.Value.fromUnsignedBigInt(dropId)],
     );
 
     return result[0].toBigInt();
@@ -566,7 +626,7 @@ export class ABClaim extends ethereum.SmartContract {
     let result = super.tryCall(
       "totalDepositedPerDrop",
       "totalDepositedPerDrop(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(dropId)]
+      [ethereum.Value.fromUnsignedBigInt(dropId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

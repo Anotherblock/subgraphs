@@ -32,4 +32,8 @@ dataSources:
           handler: handleHoldingsUpdated
         - event: HoldingsBatchUpdated(uint256,uint256[],address[])
           handler: handleHoldingsBatchUpdated
+        - event: DropDataUpdated(uint256,address,bool,uint256)
+          handler: handleDropDataUpdated
+        - event: DropDataBatchUpdated(uint256[],address[],bool[],uint256[])
+          handler: handleDropDataBatchUpdated
       file: ABClaim/ABClaim.wasm

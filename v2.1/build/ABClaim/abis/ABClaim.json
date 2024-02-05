@@ -730,6 +730,68 @@
     "anonymous": false
   },
   {
+    "type": "event",
+    "name": "DropDataBatchUpdated",
+    "inputs": [
+      {
+        "name": "dropId",
+        "type": "uint256[]",
+        "indexed": false,
+        "internalType": "uint256[]"
+      },
+      {
+        "name": "nft",
+        "type": "address[]",
+        "indexed": false,
+        "internalType": "address[]"
+      },
+      {
+        "name": "isL1",
+        "type": "bool[]",
+        "indexed": false,
+        "internalType": "bool[]"
+      },
+      {
+        "name": "supply",
+        "type": "uint256[]",
+        "indexed": false,
+        "internalType": "uint256[]"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "DropDataUpdated",
+    "inputs": [
+      {
+        "name": "dropId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "nft",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "isL1",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      },
+      {
+        "name": "supply",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
     "type": "error",
     "name": "INVALID_PARAMETER",
     "inputs": []

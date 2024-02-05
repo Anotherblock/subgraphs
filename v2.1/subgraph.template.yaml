@@ -22,12 +22,18 @@ dataSources:
         - name: ABClaim
           file: ./abis/ABClaim.json
       eventHandlers:
-        - event: RoyaltyDistributed(uint256[],uint256[])
-          handler: handleRoyaltyDistributed
+        - event: RoyaltyDistributedMultiDrop(uint256[],uint256[])
+          handler: handleRoyaltyDistributedMultiDrop
+        - event: RoyaltyDistributed(uint256,uint256)
+          handler: handleRoyaltyDistributedSingleDrop
         - event: RoyaltyClaimed(uint256,uint256[],uint256)
           handler: handleRoyaltyClaimed
         - event: HoldingsUpdated(uint256,uint256,address)
           handler: handleHoldingsUpdated
         - event: HoldingsBatchUpdated(uint256,uint256[],address[])
           handler: handleHoldingsBatchUpdated
+        - event: DropDataUpdated(uint256,address,bool,uint256)
+          handler: handleDropDataUpdated
+        - event: DropDataBatchUpdated(uint256[],address[],bool[],uint256[])
+          handler: handleDropDataBatchUpdated
       file: ./src/ab-claim.ts
