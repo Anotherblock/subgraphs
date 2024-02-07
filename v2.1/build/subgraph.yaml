@@ -6,9 +6,9 @@ dataSources:
     name: ABClaim
     network: base-testnet
     source:
-      address: "0x47Af0b5B9175001A769B8d36416577778706E112"
+      address: "0x5f683fB071F9656e45C271765E4C56976A424d18"
       abi: ABClaim
-      startBlock: 15370847
+      startBlock: 15967280
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
