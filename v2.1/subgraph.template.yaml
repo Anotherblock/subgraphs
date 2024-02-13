@@ -26,7 +26,7 @@ dataSources:
           handler: handleRoyaltyDistributedMultiDrop
         - event: RoyaltyDistributed(uint256,uint256)
           handler: handleRoyaltyDistributedSingleDrop
-        - event: RoyaltyClaimed(uint256,uint256[],uint256)
+        - event: RoyaltyClaimed(uint256,uint256[],uint256,address)
           handler: handleRoyaltyClaimed
         - event: HoldingsUpdated(uint256,uint256,address)
           handler: handleHoldingsUpdated

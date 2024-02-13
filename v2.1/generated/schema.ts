@@ -155,6 +155,19 @@ export class Claim extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get user(): string {
+    let value = this.get("user");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set user(value: string) {
+    this.set("user", Value.fromString(value));
+  }
+
   get amount(): BigInt {
     let value = this.get("amount");
     if (!value || value.kind == ValueKind.NULL) {

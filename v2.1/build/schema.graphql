@@ -9,6 +9,7 @@ type Payout @entity {
 
 type Claim @entity {
   id: String!
+  user: String!
   amount: BigInt!
   dropId: BigInt!
   tokenIds: [TokenId!]!

@@ -182,6 +182,10 @@ export class RoyaltyClaimed__Params {
   get amount(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
+
+  get user(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
 }
 
 export class RoyaltyDistributed extends ethereum.Event {
