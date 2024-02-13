@@ -55,6 +55,7 @@ export function handleRoyaltyClaimed(event: RoyaltyClaimed): void {
   const claim = new Claim(id);
   claim.amount = event.params.amount;
   claim.dropId = event.params.dropId;
+  claim.user = event.params.user.toHexString();
   claim.transactionHash = event.transaction.hash;
   claim.timestamp = event.block.timestamp;
   claim.tokenIds = new Array<string>(0);
@@ -75,7 +76,6 @@ export function handleRoyaltyClaimed(event: RoyaltyClaimed): void {
     tokenIds.push(tokenId!.id);
   }
   claim.tokenIds = tokenIds;
-
   claim.save();
 }
 
