@@ -1,12 +1,12 @@
 specVersion: 0.0.4
 schema:
-  file: schema.graphql
+  file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: ABClaim
     network: base-sepolia
     source:
-      address: "0xeB6d16C920E07982F4a687216B0D49dcb03f95F2"
+      address: '0xeB6d16C920E07982F4a687216B0D49dcb03f95F2'
       abi: ABClaim
       startBlock: 5984245
     mapping:
@@ -20,7 +20,7 @@ dataSources:
         - HoldingsBatchUpdated
       abis:
         - name: ABClaim
-          file: ABClaim/abis/ABClaim.json
+          file: ./abis/ABClaim.json
       eventHandlers:
         - event: RoyaltyDistributedMultiDrop(uint256[],uint256[])
           handler: handleRoyaltyDistributedMultiDrop
@@ -36,4 +36,4 @@ dataSources:
           handler: handleDropDataUpdated
         - event: DropDataBatchUpdated(uint256[],address[],bool[],uint256[])
           handler: handleDropDataBatchUpdated
-      file: ABClaim/ABClaim.wasm
+      file: ./src/ab-claim.ts
