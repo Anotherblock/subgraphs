@@ -6,9 +6,9 @@ dataSources:
     name: ABClaim
     network: base-sepolia
     source:
-      address: '0xeB6d16C920E07982F4a687216B0D49dcb03f95F2'
+      address: '0xC56B9c95e53670b8A5626F7Ca528da0b450AB1A3'
       abi: ABClaim
-      startBlock: 5984245
+      startBlock: 6368411
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
