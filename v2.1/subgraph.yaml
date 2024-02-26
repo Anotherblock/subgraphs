@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: ABClaim
-    network: base-sepolia
+    network: base
     source:
-      address: '0xC56B9c95e53670b8A5626F7Ca528da0b450AB1A3'
+      address: '0x33E7975712Adc2aF266165545225D5F8e1D1AC45'
       abi: ABClaim
-      startBlock: 6368411
+      startBlock: 10943295
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
