@@ -1,0 +1,25 @@
+type Payout @entity {
+  id: String!
+  dropId: BigInt!
+  amount: BigInt!
+  createdBlockNumber: BigInt!
+  timestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Claim @entity {
+  id: String!
+  user: String!
+  amount: BigInt!
+  dropId: BigInt!
+  tokenIds: [TokenId!]!
+  transactionHash: Bytes!
+  timestamp: BigInt!
+}
+
+type TokenId @entity {
+  id: String!
+  dropId: BigInt!
+  claimed: BigInt!
+  owner: String
+}

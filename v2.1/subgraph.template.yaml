@@ -1,0 +1,39 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ABClaim
+    network: {{network}}
+    source:
+      address: '{{AB_CLAIM}}'
+      abi: ABClaim
+      startBlock: {{block}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - RoyaltyDistributed
+        - RoyaltyClaimed
+        - HoldingsUpdated
+        - HoldingsBatchUpdated
+      abis:
+        - name: ABClaim
+          file: ./abis/ABClaim.json
+      eventHandlers:
+        - event: RoyaltyDistributedMultiDrop(uint256[],uint256[])
+          handler: handleRoyaltyDistributedMultiDrop
+        - event: RoyaltyDistributed(uint256,uint256)
+          handler: handleRoyaltyDistributedSingleDrop
+        - event: RoyaltyClaimed(uint256,uint256[],uint256,address)
+          handler: handleRoyaltyClaimed
+        - event: HoldingsUpdated(uint256,uint256,address)
+          handler: handleHoldingsUpdated
+        - event: HoldingsBatchUpdated(uint256,uint256[],address[])
+          handler: handleHoldingsBatchUpdated
+        - event: DropDataUpdated(uint256,address,bool,uint256)
+          handler: handleDropDataUpdated
+        - event: DropDataBatchUpdated(uint256[],address[],bool[],uint256[])
+          handler: handleDropDataBatchUpdated
+      file: ./src/ab-claim.ts
